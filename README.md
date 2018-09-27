@@ -1,6 +1,9 @@
 # vue-flags-webpack-plugin
 Remove useless code by flags in .vue SFC file
 
+[![Travis CI](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin.svg?branch=master)](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+
 ### Usage
 
 install: `npm install vue-flags-webpack-plugin -D`
