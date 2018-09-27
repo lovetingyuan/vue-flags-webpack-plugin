@@ -1,0 +1,64 @@
+{
+  "name": "vue-flags-webpack-plugin",
+  "version": "0.1.0",
+  "description": "remove useless code by flags in .vue SFC file",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "scripts": {
+    "test": "cross-env TEST=true tape test/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lovetingyuan/vue-flags-webpack-plugin.git"
+  },
+  "keywords": [
+    "vue",
+    "flags",
+    "webpack",
+    "plugin",
+    "postcss",
+    "loader",
+    "sfc",
+    "remove",
+    "code",
+    "ignore",
+    "optimization"
+  ],
+  "author": "tingyuan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lovetingyuan/vue-flags-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/lovetingyuan/vue-flags-webpack-plugin#readme",
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "dom-serializer": "^0.1.0",
+    "enhanced-resolve": "^4.1.0",
+    "htmlparser2": "^3.9.2",
+    "loader-utils": "^1.1.0",
+    "lodash.isplainobject": "^4.0.6",
+    "slash": "^2.0.0"
+  },
+  "peerDependencies": {
+    "webpack": "^3.0.0 || ^4.0.0",
+    "vue-loader": "^13.0.0 || ^14.0.0 || ^15.0.0"
+  },
+  "devDependencies": {
+    "cross-env": "^5.2.0",
+    "husky": "^1.0.0",
+    "postcss": "^7.0.2",
+    "tape": "^4.9.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
+  }
+}
