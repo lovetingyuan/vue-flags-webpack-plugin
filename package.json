@@ -11,7 +11,8 @@
     "lib"
   ],
   "scripts": {
-    "test": "cross-env TEST=true tape test/**/*.test.js"
+    "test": "cross-env TEST=true tape test/**/*.test.js",
+    "lint": "standard --fix lib/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -53,12 +54,18 @@
     "cross-env": "^5.2.0",
     "husky": "^1.0.0",
     "postcss": "^7.0.2",
+    "standard": "^12.0.1",
     "tape": "^4.9.1"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
+      "pre-commit": "npm run lint && npm test",
+      "pre-push": "npm run lint && npm test"
     }
+  },
+  "standard": {
+    "ignore": [
+      "lib/html-to-xml.js"
+    ]
   }
 }
