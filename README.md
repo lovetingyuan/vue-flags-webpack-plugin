@@ -52,7 +52,7 @@ module.exports = { /* your webpack config */
     ]
   },
   plugins: [
-    new VueFlagsFlagPlugin({
+    new VueFlagsPlugin({
       flags,
       namespace: 'flags'// or omit this option
     })
