@@ -14,8 +14,8 @@ const main = function(template, t) {
 test('transform-template:if-else', function (t) {
   const transformedTemplate = main(`
     <div>
-    <div v-if-feature="a">aaaa</div>
-    <div v-else-feature>bbbb</div>
+    <div v-if-flag="a">aaaa</div>
+    <div v-else-flag>bbbb</div>
     <img src="111">
     <img src="222"/>
     <my-comp title="ttt" />
@@ -35,9 +35,9 @@ test('transform-template:if-else', function (t) {
 test('transform-template:if-elif-else', function (t) {
   const transformedTemplate = main(`
     <div>
-    <div v-if-feature="b">bbbb</div>
-    <div v-elif-feature="a">aaaa</div>
-    <div v-else-feature>other</div>
+    <div v-if-flag="b">bbbb</div>
+    <div v-elif-flag="a">aaaa</div>
+    <div v-else-flag>other</div>
     </div>
   `, t);
   t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
@@ -49,11 +49,11 @@ test('transform-template:if-elif-else', function (t) {
 test('transform-template:nest-if-else', function (t) {
   const transformedTemplate = main(`
     <div>
-    <div v-if-feature="a">
-      <p v-if-feature="a">aaa</p>
-      <p v-else-feature>not aaa</p>
+    <div v-if-flag="a">
+      <p v-if-flag="a">aaa</p>
+      <p v-else-flag>not aaa</p>
     </div>
-    <div v-else-feature>other</div>
+    <div v-else-flag>other</div>
     </div>
   `, t);
   t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
