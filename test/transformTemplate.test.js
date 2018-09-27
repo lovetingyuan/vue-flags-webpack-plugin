@@ -1,14 +1,14 @@
-const test = require('tape');
-const transform = require('../lib/transform-template');
-const main = function(template, t) {
+const test = require('tape')
+const transform = require('../lib/transform-template')
+const main = function (template, t) {
   return transform(template, {
     a: true,
     b: false
   }, {
-    emitError(e) {
-      t.fail(e.message);
+    emitError (e) {
+      t.fail(e.message)
     }
-  });
+  })
 }
 
 test('transform-template:if-else', function (t) {
@@ -21,16 +21,16 @@ test('transform-template:if-else', function (t) {
     <my-comp title="ttt" />
     <span>text</span>
     </div>
-  `, t);
+  `, t)
   t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
   <div>aaaa</div>
   <img src="111">
     <img src="222">
     <my-comp title="ttt"></my-comp>
     <span>text</span>
-  </div>`.replace(/\s{2,}/g, ''));
-  t.end();
-});
+  </div>`.replace(/\s{2,}/g, ''))
+  t.end()
+})
 
 test('transform-template:if-elif-else', function (t) {
   const transformedTemplate = main(`
@@ -39,12 +39,12 @@ test('transform-template:if-elif-else', function (t) {
     <div v-elif-flag="a">aaaa</div>
     <div v-else-flag>other</div>
     </div>
-  `, t);
+  `, t)
   t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
   <div>aaaa</div>
-  </div>`.replace(/\s{2,}/g, ''));
-  t.end();
-});
+  </div>`.replace(/\s{2,}/g, ''))
+  t.end()
+})
 
 test('transform-template:nest-if-else', function (t) {
   const transformedTemplate = main(`
@@ -55,11 +55,11 @@ test('transform-template:nest-if-else', function (t) {
     </div>
     <div v-else-flag>other</div>
     </div>
-  `, t);
+  `, t)
   t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
   <div>
    <p>aaa</p>
   </div>
-  </div>`.replace(/\s{2,}/g, ''));
-  t.end();
-});
+  </div>`.replace(/\s{2,}/g, ''))
+  t.end()
+})

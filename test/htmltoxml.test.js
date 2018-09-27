@@ -1,5 +1,5 @@
-const xml2 = require('../lib/html-to-xml');
-const test = require('tape');
+const xml2 = require('../lib/html-to-xml')
+const test = require('tape')
 
 const template = `
 <div>
@@ -39,7 +39,7 @@ const template = `
 </div>
 `
 
-test('html-to-xml', function(t) {
+test('html-to-xml', function (t) {
   t.equal(xml2(template), `
 <div>
   <img/>
@@ -70,7 +70,6 @@ test('html-to-xml', function(t) {
   </svg>
   <title>end</title>
 </div>
-`);
-  t.end();
-});
-
+`)
+  t.end()
+})

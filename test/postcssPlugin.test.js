@@ -1,16 +1,16 @@
-const postcss = require('postcss');
-const postcssPlugin = require('../lib/postcss-flags-plugin');
+const postcss = require('postcss')
+const postcssPlugin = require('../lib/postcss-flags-plugin')
 
-const test = require('tape');
-const main = function(source, t) {
+const test = require('tape')
+const main = function (source, t) {
   return postcss([postcssPlugin({
     a: true,
     b: false
-  })]).process(source).then(ret => ret.css).catch(e => t.fail(e.message));
+  })]).process(source).then(ret => ret.css).catch(e => t.fail(e.message))
 }
 
 test('postcss', function (t) {
-  t.plan(1);
+  t.plan(1)
   main(`
     @supports (--flag: a) {
       h1:before {
@@ -46,5 +46,5 @@ test('postcss', function (t) {
         content: 'aa and bb';
       }
     `.replace(/\s{2,}/g, ''))
-  });
-});
+  })
+})
