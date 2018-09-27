@@ -94,6 +94,6 @@ vue component:
 ```
 
 ### Caveats
-- **`postcss-loader` is required to support flags in css**
+- **[`postcss-loader`](https://postcss.org/) is required to support flags in css**
   - for version>=15, see: https://vue-loader.vuejs.org/guide/pre-processors.html#postcss
   - for older `vue-loader`, see: https://vue-loader-v14.vuejs.org/zh-cn/features/postcss.html (*`vue-loader` which version < 15 is deprecated, do not use it.*)
