@@ -11,7 +11,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "npm run lint && cross-env TEST=true tape test/**/*.test.js",
+    "test": "npm run lint && tape test/*.test.js",
     "lint": "standard --fix"
   },
   "repository": {
@@ -51,7 +51,7 @@
     "vue-loader": "^13.0.0 || ^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
-    "cross-env": "^5.2.0",
+    "cross-spawn": "^6.0.5",
     "husky": "^1.0.0",
     "postcss": "^7.0.2",
     "standard": "^12.0.1",
@@ -65,7 +65,8 @@
   },
   "standard": {
     "ignore": [
-      "lib/html-to-xml.js"
+      "lib/html-to-xml.js",
+      "test/vue-cli/**"
     ]
   }
 }

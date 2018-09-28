@@ -6,7 +6,10 @@ const main = function (source, t) {
   return postcss([postcssPlugin({
     a: true,
     b: false
-  })]).process(source).then(ret => ret.css).catch(e => t.fail(e.message))
+  })])
+    .process(source, { from: void 0 })
+    .then(ret => ret.css)
+    .catch(e => t.fail(e.message))
 }
 
 test('postcss', function (t) {
