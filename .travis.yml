@@ -8,7 +8,6 @@ node_js:
 env:
     - TEST=true
 install:
-    - npm install
-    - cd test/vue-cli && npm install
+    - cd test/vue-cli && npm install && cd ../.. && npm install
 script:
     - npm test
