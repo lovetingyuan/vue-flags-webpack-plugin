@@ -3,10 +3,16 @@ const path = require('path')
 const join = path.join.bind(path, __dirname)
 const spawn = require('cross-spawn')
 const test = require('tape')
+const semver = require('semver')
 
 const readFile = f => fs.readFileSync(join('vue-cli/dist', f), 'utf8')
 
 test('integration-vue-cli', function (t) {
+  if (!semver.satisfies(process.version, '>=8')) {
+    console.log('node version < 8, skip vue-cli3 test.')
+    t.end()
+    return
+  }
   const result = spawn.sync('npm', ['run', 'build'], {
     stdio: 'ignore',
     cwd: join('vue-cli')
