@@ -9,5 +9,6 @@ env:
     - TEST=true
 install:
     - npm install
+    - cd test/vue-cli && npm install
 script:
     - npm test
