@@ -1,6 +1,6 @@
 {
   "name": "vue-flags-webpack-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "remove useless code by flags in .vue SFC file",
   "main": "index.js",
   "directories": {
