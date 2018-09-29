@@ -69,22 +69,27 @@ vue component:
 <template>
   <div>
     <p v-if-flag="FLAG_A">feature a will be enabled</p>
-    <p v-elif-flag="FLAG_B">feature b will be enabled</p>
+    <p v-elif-flag="FLAG_B">{{msg}}</p>
     <p v-else-flag>both feature a and b will be disabled</p>
   </div>
 </template>
+
 <script>
   export default {
     data() {
-      if (flags.FLAG_A) {
-        return flags.FLAG_B ? 'flag bbb' : '...';
+      return {
+        msg: flags.FLAG_B ? 'flag b enable' : '...';
       }
     }
   }
 </script>
+
+<!-- you can also use sc(a)ss, less, stylus, etc. -->
 <style>
   p { color: yellow; }
-  /* use "--flag" as property name */
+  /* You must use "--flag" as custom property name
+    @supports: https://developer.mozilla.org/en-US/docs/Web/CSS/@supports
+  */
   @supports (--flag: FLAG_A) {
     p { color: red; }
   }

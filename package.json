@@ -1,7 +1,7 @@
 {
   "name": "vue-flags-webpack-plugin",
   "version": "0.1.1",
-  "description": "remove useless code by flags in .vue SFC file",
+  "description": "remove useless code by setting flags in .vue SFC file",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -29,7 +29,8 @@
     "remove",
     "code",
     "ignore",
-    "optimization"
+    "optimization",
+    "features"
   ],
   "author": "tingyuan",
   "license": "MIT",
@@ -48,7 +49,7 @@
   },
   "peerDependencies": {
     "webpack": "^3.0.0 || ^4.0.0",
-    "vue-loader": "^13.0.0 || ^14.0.0 || ^15.0.0"
+    "vue-loader": "^14.0.0 || ^15.0.0"
   },
   "devDependencies": {
     "cross-spawn": "^6.0.5",
@@ -66,7 +67,6 @@
   },
   "standard": {
     "ignore": [
-      "lib/html-to-xml.js",
       "test/vue-cli/**"
     ]
   }

@@ -7,6 +7,9 @@ const main = function (template, t) {
   }, {
     emitError (e) {
       t.fail(e.message)
+    },
+    emitWarning (e) {
+      t.fail(e.message)
     }
   })
 }
@@ -14,21 +17,27 @@ const main = function (template, t) {
 test('transform-template:if-else', function (t) {
   const transformedTemplate = main(`
     <div>
-    <div v-if-flag="a">aaaa</div>
+    <div v-if-flag="a">aa{{title + '      ' + title2}}
+    <input type="text" v-model="value" autofocus >
+    aa</div>
     <div v-else-flag>bbbb</div>
-    <img src="111">
+    <img :src="show && imgsrc" v-once>
     <img src="222"/>
     <my-comp title="ttt" />
-    <span>text</span>
+    <span @click="fff">text</span>
     </div>
   `, t)
-  t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
-  <div>aaaa</div>
-  <img src="111">
+  t.equal(transformedTemplate, `
+    <div>
+    <div>aa{{title + '      ' + title2}}
+    <input type="text" v-model="value" autofocus>
+    aa</div>
+    \n    <img :src="show && imgsrc" v-once="">
     <img src="222">
     <my-comp title="ttt"></my-comp>
-    <span>text</span>
-  </div>`.replace(/\s{2,}/g, ''))
+    <span @click="fff">text</span>
+    </div>
+  `.trim())
   t.end()
 })
 
@@ -40,9 +49,9 @@ test('transform-template:if-elif-else', function (t) {
     <div v-else-flag>other</div>
     </div>
   `, t)
-  t.equal(transformedTemplate.replace(/\s{2,}/g, ''), `<div>
+  t.equal(transformedTemplate.replace(/\s{2,}/g, ' '), `<div>
   <div>aaaa</div>
-  </div>`.replace(/\s{2,}/g, ''))
+  </div>`.replace(/\s{2,}/g, ' '))
   t.end()
 })
 
