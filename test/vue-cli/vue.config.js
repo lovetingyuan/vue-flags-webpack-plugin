@@ -9,6 +9,7 @@ Module._resolveFilename = function _resolveFilename (request, parent, isMain) {
 }
 
 const VueFlagsPlugin = require('../../')
+
 const postcssPlugin = VueFlagsPlugin.postcssFlagsPlugin
 const flags = {
   featureA: true,

@@ -1,6 +1,6 @@
 {
   "name": "vue-flags-webpack-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "remove useless code by setting flags in .vue SFC file",
   "main": "index.js",
   "directories": {
@@ -40,12 +40,11 @@
   "homepage": "https://github.com/lovetingyuan/vue-flags-webpack-plugin#readme",
   "dependencies": {
     "chalk": "^2.4.1",
-    "dom-serializer": "^0.1.0",
     "enhanced-resolve": "^4.1.0",
-    "htmlparser2": "^3.9.2",
     "loader-utils": "^1.1.0",
     "lodash.isplainobject": "^4.0.6",
-    "slash": "^2.0.0"
+    "slash": "^2.0.0",
+    "dom-serializer": "^0.1.0"
   },
   "peerDependencies": {
     "webpack": "^3.0.0 || ^4.0.0",
