@@ -1,45 +1,58 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      <span v-if-flag="featureB">For guide and recipes,</span>
-      <span v-elif-flag="featureA">Feature a is enabled, this is true</span>
-      <a v-else-flag href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+    <h1>{{ title }}</h1>
+    <p v-if-flag="A">
+      feature A
     </p>
-    <h3>Essential Links</h3>
+    <p v-elif-flag="B">
+      feature B
+    </p>
+    <p v-else-flag>
+      nononono
+    </p>
+    <h3>Installed CLI Plugins</h3>
     <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
+      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
     </ul>
+    <h3>Essential Links</h3>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld, ' + (featureA ? 'featureA is enabled' : 'featureA is disabled'),
+  name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      title: this.msg + '-----' + (flags.A ? 'feature A' : 'not feature A')
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped lang="scss">
+<style scoped lang="less">
+@supports (--flag: A) {
+  h1:after {
+    content: ' featureA';
+    color: green;
+    font-size: .7em;
+  }
+}
+
+@supports (--flag: B) {
+  h1:after {
+    content: ' featureB';
+    color: red;
+    font-size: .7em;
+  }
+}
+
 h3 {
   margin: 40px 0 0;
 }
-@supports (--flag: featureB) {
-  h3:before {
-    content: 'featureB is enabled';
-  }
-}
-
-@supports (--flag: featureA) and (not (--flag: featureB)) {
-  h3:after {
-    content: 'featureA: enabled, featureB: disabled';
-  }
-}
-
 ul {
   list-style-type: none;
   padding: 0;
