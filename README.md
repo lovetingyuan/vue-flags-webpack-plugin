@@ -16,7 +16,7 @@ options:
   flags: {
     FLAG_A: true
   },
-  // string that used as namespace of flags in script
+  // string that used as namespace of flags in script, default is "flags"
   namespace: '',
   // filter resources by regex when the flag name(as key) is false
   files: {
@@ -58,7 +58,7 @@ module.exports = { /* your webpack config */
   plugins: [
     new VueFlagsPlugin({
       flags,
-      namespace: 'flags'// or omit this option
+      namespace: 'flags'
     })
   ]
 };
@@ -100,9 +100,8 @@ vue component:
 ```
 
 ### Caveats
-- **[`postcss-loader`](https://github.com/postcss/postcss-loader) is required to support flags in css**
-  - for version>=15, see: https://vue-loader.vuejs.org/guide/pre-processors.html#postcss
-  - for older `vue-loader`, see: https://vue-loader-v14.vuejs.org/zh-cn/features/postcss.html (*`vue-loader` which version < 15 is deprecated, do not use it.*)
-  
+- **[`postcss-loader`](https://github.com/postcss/postcss-loader) is required to support flags in css**, see https://vue-loader.vuejs.org/guide/pre-processors.html#postcss
+- not support `vue-loader` version < 15 and `webpack` version < 4
+
 ### License
 MIT
