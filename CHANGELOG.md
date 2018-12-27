@@ -1,4 +1,8 @@
 ## vue-flags-webpack-plugin changelog
+### v0.2.0
+* update vue htmlparser
+* fix: module.rule traverse
+* fix: sourceMap for template loader
 
 ### v0.1.2
 * remove `htmlparser2` and use vue `htmlparser`
