@@ -7,8 +7,8 @@
 
 <script>
 // const HelloWorld = flags.A ? require('./components/HelloWorld.vue').default : null
-import HelloWorld from './components/HelloWorld.vue';
-console.log(HelloWorld)
+import HelloWorld from './components/HelloWorld.vue?flag';
+console.log(HelloWorld);
 export default {
   name: 'app',
   components: {
