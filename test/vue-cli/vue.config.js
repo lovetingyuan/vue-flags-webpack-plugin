@@ -25,7 +25,7 @@ module.exports = {
     plugins: [
       new VueFlagsPlugin({
         flags: path.resolve(__dirname, './flags.js'),
-        watch: true,
+        watch: process.env.NODE_ENV === 'development',
         files: {
           A: [/HelloWorld/]
         }

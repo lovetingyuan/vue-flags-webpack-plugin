@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+// const HelloWorld = flags.A ? require('./components/HelloWorld.vue').default : null
+import HelloWorld from './components/HelloWorld.vue';
+console.log(HelloWorld)
 export default {
   name: 'app',
   components: {
