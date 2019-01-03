@@ -2,7 +2,7 @@ const Module = require('module')
 const path = require('path')
 const originResolveFilename = Module._resolveFilename
 Module._resolveFilename = function _resolveFilename (request, parent, isMain) {
-  if (/^(webpack|vue-loader|schema-utils|chokidar|postcss-loader|vue-template-compiler|enhanced-resolve)/.test(request)) {
+  if (/^(webpack|vue-loader|postcss-loader)/.test(request)) {
     request = path.join(__dirname, 'node_modules', request)
   }
   return originResolveFilename(request, parent, isMain)
@@ -27,7 +27,7 @@ module.exports = {
         flags: path.resolve(__dirname, './flags.js'),
         watch: process.env.NODE_ENV === 'development',
         files: {
-          A: [/HelloWorld/]
+          A: [/HelloWorld/, /plugins\/.+\.js$/]
         }
       })
     ],
