@@ -2,10 +2,15 @@ const Module = require('module')
 const path = require('path')
 const originResolveFilename = Module._resolveFilename
 Module._resolveFilename = function _resolveFilename (request, parent, isMain) {
-  if (/^(webpack|vue-loader|postcss-loader)/.test(request)) {
-    request = path.join(__dirname, 'node_modules', request)
+  let _request = request
+  if (/^(webpack|vue-loader|postcss-loader)/.test(_request)) {
+    _request = path.join(__dirname, 'node_modules', _request)
   }
-  return originResolveFilename(request, parent, isMain)
+  try {
+    return originResolveFilename(_request, parent, isMain)
+  } catch(e) {
+    return originResolveFilename(request, parent, isMain)
+  }
 }
 
 const VueFlagsPlugin = require('../../')
@@ -26,10 +31,14 @@ module.exports = {
       new VueFlagsPlugin({
         flags: path.resolve(__dirname, './flags.js'),
         watch: process.env.NODE_ENV === 'development',
+        namespace: 'flags',
         files: {
-          A: [/HelloWorld/, /plugins\/.+\.js$/]
+          A: [/HelloWorld/, /plugins\/.+\.js$/],
         }
       })
     ],
+  },
+  chainWebpack(config) {
+    config.module.rule('js').uses.delete('thread-loader')
   }
 }
