@@ -29,7 +29,7 @@ module.exports = {
   configureWebpack: {
     plugins: [
       new VueFlagsPlugin({
-        flags: path.resolve(__dirname, './flags.js'),
+        flags: './flags',
         watch: true,
         namespace: 'flags',
         files: {
