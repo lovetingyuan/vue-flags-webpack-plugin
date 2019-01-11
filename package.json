@@ -67,7 +67,8 @@
   },
   "standard": {
     "ignore": [
-      "test/vue-cli/**"
+      "test/vue-cli/**",
+      "test/webpack-test/**"
     ]
   }
 }
