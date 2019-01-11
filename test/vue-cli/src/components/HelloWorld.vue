@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ title }}</h1>
     <p v-if-flag="A">
-      feature Aaa
+      feature Aaas
     </p>
     <p v-elif-flag="B">
       feature B

@@ -10,7 +10,8 @@ const main = function (template, t) {
     },
     emitWarning (e) {
       t.fail(e.message)
-    }
+    },
+    addDependency () {}
   })
 }
 
