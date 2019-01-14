@@ -4,7 +4,7 @@
     <span v-if-flag="A">template:A_is_enable</span>
     <span v-elif-flag="B">template:B_is_enable</span>
     <span v-else-flag>template:A_B_is_disable</span>
-    <a-comp>template:ignore_a-component_or_not</a-comp>
+    <a-comp></a-comp>
   </div>
 </template>
 <script>
@@ -30,6 +30,12 @@ export default {
 @supports not (--flag: A) {
   h3:before {
     content: 'style:A_is_disabled';
+    color: red;
+  }
+}
+@supports not (--flag: B) {
+  h3:before {
+    content: 'style:B_is_disabled';
     color: red;
   }
 }

@@ -4,14 +4,6 @@ const main = function (template, t) {
   return transform(template, {
     a: true,
     b: false
-  }, {
-    emitError (e) {
-      t.fail(e.message)
-    },
-    emitWarning (e) {
-      t.fail(e.message)
-    },
-    addDependency () {}
   })
 }
 
