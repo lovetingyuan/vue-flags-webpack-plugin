@@ -7,27 +7,27 @@ Remove useless code by setting flags in .vue SFC file(works with [`vue-loader`](
 
 ### usage
 
-install: `npm install vue-flags-webpack-plugin -D`
+install:
+```bash
+npm install vue-flags-webpack-plugin -D
+```
 
 options:
-* `flags`
-  + a plain object that contains flags value(boolean type) or a file(directory) path that exports flags object.
-  + this option is required.
-* `namespace`
-  + string type, used as namespace of flags in JavaScript.
-  + this option is required.
-* `watch`
-  + boolean type, only used in development mode.
+* `flags` (object|string, required)
+  + a plain object that contains flags value(boolean) or a file(directory) path that exports flags object.
+* `namespace` (string, required)
+  + used as namespace of flags in JavaScript.
+* `watch` (boolean, default: false)
+  + should only be used in development mode.
   + support to modify flags and reload your app when this option is `true`.
   + `flags` must be a file(directory) path when this options is `true`.
-  + default is `false`.
-* `files`
+* `files` (object, default: null)
   + a plain object that contains flag name and regular expression of files.
-  + when flag is false, the files matched will be ignored.
+  + when flag is `false`, the files matched will be ignored.
   + you have to append `?flag` query param to `import` or `require` statement of modules that may be ignored.
 
 ### example
-flags file: './app-flags.js'
+flags file: `'./app-flags.js'`
 ```javascript
 module.exports = {
   FLAG_A: true,
@@ -39,13 +39,13 @@ webpack config:
 ```javascript
 const VueFlagsPlugin = require('vue-flags-webpack-plugin');
 const postcssFlagsPlugin = VueFlagsPlugin.postcssFlagsPlugin;
-
-module.exports = { /* your webpack config */
+/* your webpack config */
+module.exports = {
   module: {
     rules: [
       // ...other rules
       {
-        test: /\.css$/, // just for example
+        test: /\.css$/,
         use: [
           'css-loader',
           {
