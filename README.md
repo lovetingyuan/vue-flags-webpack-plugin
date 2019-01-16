@@ -1,5 +1,5 @@
 # vue-flags-webpack-plugin
-Remove useless code by setting flags in .vue SFC file(works with [`vue-loader`](https://github.com/vuejs/vue-loader))
+Remove useless code by setting flags in .vue SFC file(works with [`vue-loader`](https://github.com/vuejs/vue-loader) > 15 and `webpack` >= 4)
 
 [![npm version](https://img.shields.io/npm/v/vue-flags-webpack-plugin.svg)](https://www.npmjs.com/package/vue-flags-webpack-plugin)
 [![Build Status](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin.svg?branch=master)](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin)
@@ -91,7 +91,7 @@ vue component:
       }
     },
     mounted() {
-      // if FLAG_B is false, moduleB is null
+      // if FLAG_B is false, moduleB is undefined
       if (moduleB) { moduleB() }
     }
   }
