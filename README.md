@@ -18,12 +18,12 @@ options:
 * `namespace` (string, required)
   + used as namespace of flags in JavaScript.
 * `watch` (boolean, default: false)
-  + should only be used in development mode.
   + support to modify flags and reload your app when this option is `true`.
+  + should only be used in development mode.(recommend: `watch: process.env.NODE_ENV === 'development'`)
   + `flags` must be a file(directory) path when this options is `true`.
 * `files` (object, default: null)
-  + a plain object that contains flag name and regular expression of files.
-  + when flag is `false`, the files matched will be ignored.
+  + a plain object that contains flag name as key and regular expression of as value.
+  + when flag is `false`, the files matched(by the absolute path of module) will be ignored.
 
 ### example
 flags file: `./app-flags.js`
