@@ -24,14 +24,13 @@ options:
 * `files` (object, default: null)
   + a plain object that contains flag name and regular expression of files.
   + when flag is `false`, the files matched will be ignored.
-  + you have to append `?flag` query param to `import` or `require` statement of modules that may be ignored.
 
 ### example
-flags file: `'./app-flags.js'`
+flags file: `./app-flags.js`
 ```javascript
 module.exports = {
   FLAG_A: true,
-  FLAG_B: false
+  FLAG_B: false,
 }
 ```
 
@@ -83,7 +82,7 @@ vue component:
 </template>
 
 <script>
-  import moduleB from './b-related-module?flag'; // must add '?flag'
+  import moduleB from './b-related-module';
   export default {
     data() {
       return {
