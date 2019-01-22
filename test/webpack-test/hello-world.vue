@@ -8,7 +8,7 @@
   </div>
 </template>
 <script>
-import AComponent from './a-component.vue?flag'
+import AComponent from './a-component.vue'
 export default {
   components: {
     'a-comp': AComponent
