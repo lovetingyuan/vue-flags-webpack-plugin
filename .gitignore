@@ -60,5 +60,5 @@ typings/
 # next.js build output
 .next
 
-test/vue-cli/
+dev-app/
 .vscode/
