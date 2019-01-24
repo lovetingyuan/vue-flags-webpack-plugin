@@ -16,14 +16,21 @@ options:
 * `flags` (object|string, required)
   + a plain object that contains flags value(boolean) or a file(directory) path that exports flags object.
 * `namespace` (string, required)
-  + used as namespace of flags in JavaScript.
+  + used as namespace of flags in JavaScript, must be a valid variable name.
 * `watch` (boolean, default: false)
   + support to modify flags and reload your app when this option is `true`.
-  + should only be used in development mode.(recommend: `watch: process.env.NODE_ENV === 'development'`)
-  + `flags` must be a file(directory) path when this options is `true`.
+  + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`
+  + Note that `flags` must be a file(directory) path when this options is `true`.
 * `files` (object, default: null)
-  + a plain object that contains flag name as key and regular expression of as value.
-  + when flag is `false`, the files matched(by the absolute path of module) will be ignored.
+  + a plain object that contains flag name or expression as key and regular expressions of as value.
+    + ```javascript
+      {
+        FLAG_A: [/a\.js$/], // if FLAG_A is false, a.js will be ignored,
+        'FLAG_A && FLAG_B': [/a-b\.js$/], // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
+      }
+      ```
+  + Note that the regular expression will test agianst the absolute path of modules.
+  + Module that is ignored will export `undefined`, remember to do some check in the code.
 
 ### example
 flags file: `./app-flags.js`
@@ -38,7 +45,6 @@ webpack config:
 ```javascript
 const VueFlagsPlugin = require('vue-flags-webpack-plugin');
 const postcssFlagsPlugin = VueFlagsPlugin.postcssFlagsPlugin;
-/* your webpack config */
 module.exports = {
   module: {
     rules: [

@@ -1,10 +1,12 @@
 ## vue-flags-webpack-plugin changelog
 ### v1.0.0
-* support modify flags in development mode(flags could be file path)
-* changed the way to ignore files(now you have to set "?flag")
-* namespace must be specified now
-* allow to use this plugin without vue
-* fix some bugs
+* add `watch` option to support modify flags in development
+* `flags` could also be a file or directory path
+* use loader instead of plugin to ignore files(modules)
+* `namespace` must be specified
+* plugin could be used without vue
+* support use expression as key in `files`
+* fix bugs and improve performance
 
 ### v0.1.2
 * remove `htmlparser2` and use vue official `htmlparser`
