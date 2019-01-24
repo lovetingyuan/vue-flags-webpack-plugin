@@ -19,18 +19,19 @@ options:
   + used as namespace of flags in JavaScript, must be a valid variable name.
 * `watch` (boolean, default: false)
   + support to modify flags and reload your app when this option is `true`.
-  + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`
+  + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
   + Note that `flags` must be a file(directory) path when this options is `true`.
-* `files` (object, default: null)
+* `files` (object, default: {})
   + a plain object that contains flag name or expression as key and regular expressions of as value.
-    + ```javascript
+      ```javascript
       {
-        FLAG_A: [/a\.js$/], // if FLAG_A is false, a.js will be ignored,
-        'FLAG_A && FLAG_B': [/a-b\.js$/], // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
+        // if FLAG_A is false, a.js will be ignored,
+        'FLAG_A': [/a\.js$/],
+        // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
+        'FLAG_A && FLAG_B': [/a-b\.js$/],
       }
       ```
   + Note that the regular expression will test agianst the absolute path of modules.
-  + Module that is ignored will export `undefined`, remember to do some check in the code.
 
 ### example
 flags file: `./app-flags.js`
@@ -92,6 +93,7 @@ vue component:
   export default {
     data() {
       return {
+        // "FLAGS" as namespace
         msg: FLAGS.FLAG_B ? 'flag b enable' : '...';
       }
     },
