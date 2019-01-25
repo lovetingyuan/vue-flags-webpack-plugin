@@ -15,6 +15,12 @@ npm install vue-flags-webpack-plugin -D
 options:
 * `flags` (object|string, required)
   + a plain object that contains flags value(boolean) or a file(directory) path that exports flags object.
+  ```javascript
+  {
+    FLAG_A: true,
+    FLAG_B: false,
+  }
+  ```
 * `namespace` (string, required)
   + used as namespace of flags in JavaScript, must be a valid variable name.
 * `watch` (boolean, default: false)
