@@ -54,6 +54,7 @@ test('webpack test', t => {
       new FlagPlugin({
         flags: './flags.js',
         namespace: 'flags',
+        watch: true,
         files: {
           B: /a-component\.vue$/
         }
