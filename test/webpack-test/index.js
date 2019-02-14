@@ -9,7 +9,7 @@ const test = require('tape')
 const originResolveFilename = Module._resolveFilename
 Module._resolveFilename = function _resolveFilename (request, parent, isMain) {
   let _request = request
-  if (/^(webpack|vue-loader|postcss-loader)/.test(_request)) {
+  if (/^(webpack|vue-loader)/.test(_request)) {
     _request = path.join(__dirname, 'node_modules', _request)
   }
   try {
