@@ -19,7 +19,7 @@ Module._resolveFilename = function _resolveFilename (request, parent, isMain) {
   }
 }
 
-const FlagPlugin = require('../../index')
+const FlagPlugin = require('../..')
 function readFile(compiler, name) {
   const fs = compiler.outputFileSystem;
   return fs.readFileSync(path.join(compiler.outputPath, name), 'utf8');
@@ -54,7 +54,7 @@ test('webpack test', t => {
       new FlagPlugin({
         flags: './flags.js',
         namespace: 'flags',
-        watch: true,
+        watch: false,
         files: {
           B: /a-component\.vue$/
         }
