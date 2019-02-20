@@ -5,7 +5,7 @@
 * `flags` could also be a file or directory path
 * use loader instead of plugin to ignore files(modules)
 * `namespace` is required now
-* plugin could be used without vue(but with warning)
+* plugin could be used without vue
 * support use js expression as key in `files`
 * fix bugs and improve performance
 
