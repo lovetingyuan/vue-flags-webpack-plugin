@@ -1,4 +1,1 @@
-module.exports = {
-  A: true,
-  B: false
-}
+module.exports = {"ta":true,"tb":false}

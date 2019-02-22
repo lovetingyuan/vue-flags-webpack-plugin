@@ -1,2 +1,7 @@
 import App from './app.vue'
-console.log(App)
+import Vue from 'vue'
+new Vue({
+  render(h) {
+    return h(App)
+  }
+})

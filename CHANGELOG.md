@@ -5,6 +5,7 @@
   + `flags` could also be a file or directory path
   + plugin could be used without vue
   + support to use js expression as key in `files`
+  + report missing flags both in development and production
 * improvement
   + remove vue `htmlparser` and use `compilerOptions.modules` to transform flag directives
   + use loader instead of plugin to ignore files(modules)
