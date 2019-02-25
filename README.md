@@ -29,14 +29,14 @@ options:
   + Note that `flags` must be a file(directory) path when this options is `true`.
 * `files` (object, default: {})
   + a plain object that contains flag name or expression as key and regular expressions of as value.
-    ```javascript
-    {
-      // if FLAG_A is false, a.js will be ignored,
-      'FLAG_A': [/a\.js$/],
-      // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
-      'FLAG_A && FLAG_B': [/a-b\.js$/],
-    }
-    ```
+  ```javascript
+  {
+    // if FLAG_A is false, a.js will be ignored,
+    'FLAG_A': [/a\.js$/],
+    // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
+    'FLAG_A && FLAG_B': [/a-b\.js$/],
+  }
+  ```
   + Note that the regular expression will test agianst the absolute path of modules.
 
 ### example
