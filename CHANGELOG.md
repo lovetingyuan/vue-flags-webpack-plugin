@@ -12,6 +12,11 @@
   + `namespace` is required now
   + fix bugs and better error tips and performance improvement
 
+### v0.2.0
+* update vue `htmlparser`
+* fix: `module.rule` traverse
+* fix: missing sourceMap for template loader
+
 ### v0.1.2
 * remove `htmlparser2` and use vue official `htmlparser`
 
