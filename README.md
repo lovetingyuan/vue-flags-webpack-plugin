@@ -37,7 +37,7 @@ options:
     'FLAG_A && FLAG_B': [/a-b\.js$/],
   }
   ```
-  + Note that the regular expression will test agianst the absolute path of modules.
+  + Note that the regular expression will match the absolute path of modules.
 
 ### example
 flags file: `./app-flags.js`
