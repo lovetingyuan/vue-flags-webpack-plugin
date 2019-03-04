@@ -28,7 +28,7 @@ options:
   + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
   + Note that `flags` must be a file(directory) path when this options is `true`.
 * `files` (object, default: {})
-  + a plain object that contains flag name or expression as key and regular expressions of as value.
+  + a plain object that use flag name or expression as key and regexp as value.
   ```javascript
   {
     // if FLAG_A is false, a.js will be ignored,
