@@ -3,7 +3,7 @@
 * features
   + add `watch` option to support modify flags in development
   + `flags` could also be a file or directory path
-  + plugin could be used without vue
+  + plugin could be used in non-vue project
   + support to use js expression as key in `files`
   + report missing flags both in development and production
 * improvement

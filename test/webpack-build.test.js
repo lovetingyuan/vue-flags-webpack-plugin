@@ -17,6 +17,8 @@ test('webpack-template', t => {
     wt('a', 'd', ret(0, 2, 4)),
     wt('a', 'e', ret(0, 2, 5)),
     wt('f', ret(6)),
-    wt('a', 'c', 'e', ret(0, 2, 3))
+    wt('a', 'c', 'e', ret(0, 2, 3)),
+    wt('a', 'b', 'c', ret(0, 1, 3)),
+    wt('a', ret(0, 2))
   ]).then(() => t.end()).catch(e => t.fail(e))
 })
