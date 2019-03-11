@@ -54,13 +54,13 @@ const webpackConfig = (flags) => ({
     ]
   },
   plugins: [
-    new VueLoaderPlugin(),
     new FlagPlugin({
       flags: flags || './flags.js',
       namespace,
       watch: false,
     }),
-    new MiniCssExtractPlugin({ filename: '[name].css' })
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new VueLoaderPlugin(),
   ]
 })
 
