@@ -126,5 +126,8 @@ vue component:
 </style>
 ```
 
+### attention
+* `v-*-flag` can not be used with `v-if` or `v-pre` on the same node
+
 ### License
 MIT
