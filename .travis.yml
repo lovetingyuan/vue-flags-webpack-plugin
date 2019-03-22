@@ -3,11 +3,9 @@ node_js:
   - "10"
   - "9"
   - "8"
-  - "7"
-  - "6"
 env:
     - TEST=true
 install:
-    - cd test/webpack-test && npm install && cd ../.. && npm install
+    - npm install
 script:
     - npm test

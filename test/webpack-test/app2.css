@@ -1,0 +1,15 @@
+.container {
+  background-color: rebeccapurple;
+}
+
+@supports (--flag: b) {
+  h3:before {
+    content: 'style:bbbbbbbbbbbbbbbbbbbbbbbbbb';
+  }
+}
+
+@supports not(--flag: b) {
+  h3:after {
+    content: 'style:nobbbbbbbbbbbbbbbbbbbbbb';
+  }
+}

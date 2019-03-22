@@ -15,17 +15,10 @@
   </div>
 </template>
 
-<script title="basic test">
-[
-  {
-    flags: { a: true, b: false, c: false },
-    includes: [ 'a1', 'b0' ],
-    excludes: [ 'c0_a0_b0' ]
-  },
-  {
-    flags: { a: false, b: true, c: false },
-    includes: [ 'b1' ],
-    excludes: [ 'b0' ]
-  },
-]
+<script title="basic-test">
+exports = {
+  a1_b0_c0: 'a1, b0, c0_a1',
+  a0_b1_c0: 'b1, c0_a0_b1',
+  a1_b0_c1: 'a1, b0, c1',
+}
 </script>

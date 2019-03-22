@@ -1,1 +1,0 @@
-module.exports = {"ta":true,"tb":false}
