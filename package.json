@@ -76,7 +76,7 @@
     "ignore": [
       "dev-app/**",
       "test/webpack-test/**",
-      "test/compilers/**"
+      "test/dev.js"
     ]
   }
 }
