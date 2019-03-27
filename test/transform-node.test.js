@@ -1,13 +1,17 @@
-const runTest = require('./transform-node')
+const { runTest, loadCompiler } = require('./transform-node')
 const versions = [
-  // '2.5.12',
-  // '2.6.0',
-  '2.6.10'
+  '2.5.12',
+  '2.6.0',
+  '2.6.10',
 ]
 const templates = [
-  'basic'
-  // 'nest',
+  'basic',
+  'nest',
+  'condition',
+  'slot',
 ]
-templates.forEach(t => {
-  versions.forEach(v => runTest(v, t))
+Promise.all(versions.map(v => loadCompiler(v))).then(compilers => {
+  compilers.forEach((compiler, i) => {
+    templates.forEach(t => runTest(compiler, versions[i], t))
+  })
 })

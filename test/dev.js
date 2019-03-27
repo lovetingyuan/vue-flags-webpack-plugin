@@ -1,33 +1,25 @@
 const template = `
   <div>
-    <h1>basic</h1>
-    <div v-if="a">
-      <h1 v-if-flag="sdf">ghjkll;jh</h1>
-      <h2 v-elif-flag="bb">bbbbbbbbb</h2>
-      <hr>
-      <h3 v-if-flag="cc">cccccc</h3>
-      <h4 v-else-flag>dddd</h4>
-      <img>
-    </div>
-    <div v-else-if="b">
-      <span></span>
-      <h5 v-if-flag="ddddd">ddddddddddd</h5>
-      <dd></dd>
-      <h6 v-if-flag="eeeee">eeeeeee</h6>
-      <p v-elif-flag="dsfsdfsd"></p>
-      <span v-else-flag>ghkj</span>
-    </div>
-    <div v-else>
-      <ul v-if-flag="sdhhjjk">
-        <li v-if-flag="thiskd"></li>
-        <li v-else-flag>jhdfsk</li>
-      </ul>
-    </div>
+  <hello>
+  <template slot="foo" v-if-flag="e">
+    <span v-if-flag="a">__e1_a1--</span>
+    <span v-elif-flag="b">__e1_a0_b1--</span>
+    <span v-else-flag>__e1_a0_b0--</span>
+  </template>
+  <template slot="bar" slot-scope="props" v-if-flag="b"> {{props}}
+    <span v-if-flag="d">__b1_d1--</span>
+    <span v-else-flag>__b1_d0--</span>
+  </template>
+  <span v-else-flag slot="foot" slot-scope="dfs">
+    <span v-if-flag="a">__b0_a1--</span>
+    <span v-else-flag>__b0_a0--</span>
+  </span>
+</hello>
   </div>
 `
 const loadCompiler = require('./transform-node/compiler')
 const { _preTransformNode, _postTransformNode } = require('../lib/transform-node')
-loadCompiler('2.6.10').then(({ compile }) => {
+loadCompiler('2.5.17').then(({ compile }) => {
   return compile(template, {
     outputSourceRange: true,
     whitespace: 'condense',
@@ -44,7 +36,7 @@ loadCompiler('2.6.10').then(({ compile }) => {
   })
 }).then((ret) => {
   console.log(ret)
-  if (ret.errors) {
+  if (ret.errors && ret.errors.length) {
     throw new Error(ret.errors)
   }
 }).catch(err => {

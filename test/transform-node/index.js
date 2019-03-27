@@ -7,7 +7,6 @@ const {
 const templates = require('./templates')
 const loadCompiler = require('./compiler')
 const test = require('tape')
-const vm = require('vm')
 const chalk = require('chalk')
 
 function collectTexts (str) {
@@ -17,28 +16,33 @@ function collectTexts (str) {
   return [...ret]
 }
 
-function getFlags (flagStr) {
-  const flags = {}
-  flagStr.split('_').forEach(v => {
-    flags[v[0]] = v[1] === '1'
-  })
-  return flags
-}
-
 function compareArray (a1, a2) {
   if (a1.length !== a2.length) return false
   return a1.every(v => a2.includes(v))
 }
 
-module.exports = async function runTest (version, templateName) {
-  const { parseComponent, compile } = await loadCompiler(version)
+function genFlags(seeds, num = 15) {
+  const ret = []
+  for (let i = 0; i < num; i++) {
+    const flagMap = {}
+    const flags = seeds.map(c => {
+      flagMap[c] = Math.random() > 0.5
+      return c + (flagMap[c] ? 1 : 0)
+    })
+    flags._map = flagMap
+    ret.push(flags)
+  }
+  return ret
+}
+
+exports.runTest = function runTest ({ parseComponent, compile }, version, templateName) {
   const {
-    template: { content: html },
-    script: { content: code, attrs: { title } }
+    template: { content: html, attrs: { title } },
   } = parseComponent(templates[templateName])
-  const cases = vm.runInNewContext(code)
+  const allTexts = collectTexts(html)
+  const flagsList = genFlags(['a', 'b', 'c', 'd', 'e', 'f'])
   test(chalk.cyan(`${templateName}/${title}@${version}`), t => {
-    Object.keys(cases).forEach(flagStr => {
+    flagsList.forEach(flags => {
       const { render, staticRenderFns, errors } = compile(html, {
         outputSourceRange: true,
         modules: [{
@@ -47,16 +51,18 @@ module.exports = async function runTest (version, templateName) {
             return _preTransformNode(ast, options)
           },
           postTransformNode (ast, option) {
-            _postTransformNode(ast, option, getFlags(flagStr))
+            _postTransformNode(ast, option, flags._map)
           }
         }]
       })
       const result = render + staticRenderFns
       t.ok(errors.length === 0 && !/v-(if|else|elif)-flag/.test(result), 'no errors and v-*-flag dirs')
       const retOfCompiler = collectTexts(result)
-      const retOfTest = cases[flagStr].split(',').map(v => v.trim())
-      t.ok(compareArray(retOfCompiler, retOfTest), 'passed for ' + chalk.green(flagStr))
+      const retOfTest = allTexts.filter(text => text.split('_').every(t => flags.includes(t)))
+      t.ok(compareArray(retOfCompiler, retOfTest), 'passed for ' + chalk.green(flags))
     })
     t.end()
   })
 }
+
+exports.loadCompiler = loadCompiler

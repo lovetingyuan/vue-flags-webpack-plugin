@@ -10,7 +10,9 @@ module.exports = async function loadCompiler (version) {
   const createCachePath = findCacheDir({ name: PLUGIN_NAME, thunk: true })
   const cachePath = createCachePath('tests', 'vue-template-compiler-v' + version + '.js')
   if (fse.pathExistsSync(cachePath)) {
-    return require(cachePath)
+    try {
+      return require(cachePath)
+    } catch (e) {}
   }
   await fse.ensureFile(cachePath)
   await onEnd(got.stream(url).pipe(fse.createWriteStream(cachePath)))
