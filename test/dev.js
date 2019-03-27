@@ -1,7 +1,7 @@
 const template = `
   <div>
     <h1>basic</h1>
-    <!--<div v-if="a">
+    <div v-if="a">
       <h1 v-if-flag="sdf">ghjkll;jh</h1>
       <h2 v-elif-flag="bb">bbbbbbbbb</h2>
       <hr>
@@ -22,21 +22,18 @@ const template = `
         <li v-if-flag="thiskd"></li>
         <li v-else-flag>jhdfsk</li>
       </ul>
-    </div>-->
-    <div>
-      <span slot="afsdf">dfsfd</span>
-      <span slot="dfg" slot-scope="sfsf">9089j</span>
     </div>
   </div>
 `
 const loadCompiler = require('./transform-node/compiler')
-const { _preTransformNode } = require('../lib/transform-node')
+const { _preTransformNode, _postTransformNode } = require('../lib/transform-node')
 loadCompiler('2.6.10').then(({ compile }) => {
   return compile(template, {
     outputSourceRange: true,
+    whitespace: 'condense',
     modules: [{
       preTransformNode(ast, options) {
-        // return _preTransformNode(ast, options)
+        return _preTransformNode(ast, options)
       },
       postTransformNode(ast, options) {
         if (!ast.parent) {

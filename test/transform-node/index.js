@@ -1,6 +1,6 @@
 const {
-  preTransformNode,
-  postTransformNode,
+  _preTransformNode,
+  _postTransformNode,
   staticKeys
 } = require('../../lib/transform-node')
 
@@ -43,9 +43,11 @@ module.exports = async function runTest (version, templateName) {
         outputSourceRange: true,
         modules: [{
           staticKeys,
-          preTransformNode,
+          preTransformNode(ast, options) {
+            return _preTransformNode(ast, options)
+          },
           postTransformNode (ast, option) {
-            postTransformNode(ast, option, { flags: getFlags(flagStr) })
+            _postTransformNode(ast, option, getFlags(flagStr))
           }
         }]
       })
