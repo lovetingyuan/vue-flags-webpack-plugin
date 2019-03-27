@@ -21,7 +21,7 @@ function compareArray (a1, a2) {
   return a1.every(v => a2.includes(v))
 }
 
-function genFlags(seeds, num = 15) {
+function genFlags (seeds, num = 15) {
   const ret = []
   for (let i = 0; i < num; i++) {
     const flagMap = {}
@@ -37,7 +37,7 @@ function genFlags(seeds, num = 15) {
 
 exports.runTest = function runTest ({ parseComponent, compile }, version, templateName) {
   const {
-    template: { content: html, attrs: { title } },
+    template: { content: html, attrs: { title } }
   } = parseComponent(templates[templateName])
   const allTexts = collectTexts(html)
   const flagsList = genFlags(['a', 'b', 'c', 'd', 'e', 'f'])
