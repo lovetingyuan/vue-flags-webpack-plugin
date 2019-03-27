@@ -43,7 +43,7 @@ module.exports = async function runTest (version, templateName) {
         outputSourceRange: true,
         modules: [{
           staticKeys,
-          preTransformNode(ast, options) {
+          preTransformNode (ast, options) {
             return _preTransformNode(ast, options)
           },
           postTransformNode (ast, option) {
