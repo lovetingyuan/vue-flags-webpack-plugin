@@ -53,11 +53,11 @@ const webpackConfig = (flags) => ({
         a: /add\.js$/
       }
     }),
-    new VueLoaderPlugin(),
+    new VueLoaderPlugin()
   ]
 })
 
-module.exports = function(flags) {
+module.exports = function (flags) {
   return new Promise((resolve, reject) => {
     const compiler = webpack(webpackConfig(flags))
     const fs = compiler.outputFileSystem = new MemoryFileSystem()

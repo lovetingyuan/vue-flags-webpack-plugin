@@ -1,6 +1,6 @@
 import App from './app.vue'
-new Vue({
-  render(h) {
+new Vue({ // eslint-disable-line
+  render (h) {
     return h(App)
   }
 })

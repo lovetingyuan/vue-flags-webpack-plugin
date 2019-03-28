@@ -1,11 +1,11 @@
 const {
-  _preTransformNode,
-  _postTransformNode,
+  preTransformNode,
+  postTransformNode,
   staticKeys
 } = require('../../lib/transform-node')
 
 const templates = require('./templates')
-const loadCompiler = require('./compiler')
+const loadCompiler = require('./loadCompiler')
 const test = require('tape')
 const chalk = require('chalk')
 
@@ -35,7 +35,7 @@ function genFlags (seeds, num = 15) {
   return ret
 }
 
-exports.runTest = function runTest ({ parseComponent, compile }, version, templateName) {
+function runTest ({ parseComponent, compile }, version, templateName) {
   const {
     template: { content: html, attrs: { title } }
   } = parseComponent(templates[templateName])
@@ -47,11 +47,9 @@ exports.runTest = function runTest ({ parseComponent, compile }, version, templa
         outputSourceRange: true,
         modules: [{
           staticKeys,
-          preTransformNode (ast, options) {
-            return _preTransformNode(ast, options)
-          },
+          preTransformNode,
           postTransformNode (ast, option) {
-            _postTransformNode(ast, option, flags._map)
+            postTransformNode(ast, option, flags._map)
           }
         }]
       })
@@ -65,4 +63,6 @@ exports.runTest = function runTest ({ parseComponent, compile }, version, templa
   })
 }
 
-exports.loadCompiler = loadCompiler
+module.exports = {
+  loadCompiler, runTest
+}

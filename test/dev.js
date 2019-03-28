@@ -17,15 +17,20 @@ const template = `
 </hello>
   </div>
 `
-const loadCompiler = require('./transform-node/compiler')
-const { _preTransformNode, _postTransformNode } = require('../lib/transform-node')
+const { loadCompiler } = require('./transform-node')
+const {
+  preTransformNode,
+  // postTransformNode,
+  staticKeys
+} = require('../lib/transform-node')
 loadCompiler('2.5.17').then(({ compile }) => {
   return compile(template, {
     outputSourceRange: true,
     whitespace: 'condense',
     modules: [{
+      staticKeys,
       preTransformNode(ast, options) {
-        return _preTransformNode(ast, options)
+        return preTransformNode(ast, options)
       },
       postTransformNode(ast, options) {
         if (!ast.parent) {

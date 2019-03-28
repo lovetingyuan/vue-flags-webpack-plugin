@@ -1,4 +1,4 @@
-const webpackTest = require('./webpack-test')
+const webpackTest = require('./webpack-build')
 const test = require('tape')
 
 ;[
