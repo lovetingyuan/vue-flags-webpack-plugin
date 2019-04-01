@@ -1,6 +1,6 @@
 <template title="basic-test">
   <div>
-    <h1>basic</h1>
+    <h1 name="">basic</h1>
     <div v-if-flag="a"> __a1-- </div>
     <hello-world></hello-world>
     <ul>
@@ -9,7 +9,7 @@
     </ul>
     <template></template>
     <span v-if-flag="c">__c1--</span>
-                                             
+
     <!--foo-->
     <span v-elif-flag="a">__c0_a1--</span>  <!--bar-->
     <span v-elif-flag="b">__c0_a0_b1--</span>

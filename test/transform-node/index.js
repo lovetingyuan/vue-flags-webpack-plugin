@@ -11,8 +11,9 @@ const chalk = require('chalk')
 
 function collectTexts (str) {
   const textReg = /__([a-z01_]+?)--/g
+  const commentReg = /<!--([\s\S]*?)-->/g
   const ret = new Set()
-  str.replace(textReg, (s, t) => ret.add(t))
+  str.replace(commentReg, () => '').replace(textReg, (s, t) => ret.add(t))
   return [...ret]
 }
 
@@ -22,7 +23,14 @@ function compareArray (a1, a2) {
 }
 
 function genFlags (seeds, num = 15) {
-  const ret = []
+  if (typeof seeds === 'string') {
+    const flags = seeds.split('_')
+    const flagMap = {}
+    flags._map = flagMap
+    flags.forEach(f => { flagMap[f[0]] = f[1] === '1' })
+    return [flags]
+  }
+  const ret = [] // [['a1', 'b0', _map: { a: true, b: false }]]
   for (let i = 0; i < num; i++) {
     const flagMap = {}
     const flags = seeds.map(c => {
@@ -35,12 +43,12 @@ function genFlags (seeds, num = 15) {
   return ret
 }
 
-function runTest ({ parseComponent, compile }, version, templateName) {
+function runTest ({ parseComponent, compile }, version, templateName, num) {
   const {
-    template: { content: html, attrs: { title } }
+    template: { content: html, attrs: { title, flags } }
   } = parseComponent(templates[templateName])
   const allTexts = collectTexts(html)
-  const flagsList = genFlags(['a', 'b', 'c', 'd', 'e', 'f'])
+  const flagsList = flags ? genFlags(flags) : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], num)
   test(chalk.cyan(`${templateName}/${title}@${version}`), t => {
     flagsList.forEach(flags => {
       const { render, staticRenderFns, errors } = compile(html, {
@@ -49,7 +57,7 @@ function runTest ({ parseComponent, compile }, version, templateName) {
           staticKeys,
           preTransformNode,
           postTransformNode (ast, option) {
-            postTransformNode(ast, option, flags._map)
+            postTransformNode(ast, option, { flags: flags._map })
           }
         }]
       })
@@ -63,6 +71,19 @@ function runTest ({ parseComponent, compile }, version, templateName) {
   })
 }
 
+function runTests(compiler, version) {
+  Object.keys(templates).forEach(name => {
+    runTest(compiler, version, name)
+  })
+}
+
 module.exports = {
-  loadCompiler, runTest
+  loadCompiler, runTest, runTests
+}
+
+if (require.main === module) {
+  const version = '2.6.10'
+  loadCompiler(version).then(compiler => {
+    runTest(compiler, version, 'dev', 1)
+  })
 }
