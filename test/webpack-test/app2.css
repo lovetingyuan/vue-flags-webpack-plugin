@@ -8,7 +8,7 @@
   }
 }
 
-@supports not(--flag: b) {
+@supports not (--flag: b) {
   h3:after {
     content: 'style:nobbbbbbbbbbbbbbbbbbbbbb';
   }

@@ -1,30 +1,117 @@
-const webpackTest = require('./webpack-build')
+const { build, dev } = require('./webpack-test')
 const test = require('tape')
+const chalk = require('chalk')
+const clearModule = require('clear-module')
 
-;[
+const has = (flag, result, watch) => {
+  return new RegExp(`(template|${watch ? '' : 'script|'}style):${flag}{5,}`).test(result)
+}
+
+const buildCases = [
   {
     flags: { a: true, b: false },
-    callback (result, t) {
-      t.ok(/(template|script|style):a{5,}/.test(result))
-      t.notOk(/(template|script|style):b{5,}/.test(result))
-      t.ok(/(add){6,}/.test(result))
+    callback (ret, t) {
+      t.ok(has('a', ret))
+      t.notOk(has('noa', ret))
+      t.notOk(has('b', ret))
+      t.ok(has('nob', ret))
+      t.ok(/(add){6,}/.test(ret))
+    }
+  },
+  {
+    flags: { a: false, b: true },
+    callback (ret, t) {
+      t.notOk(has('a', ret))
+      t.ok(has('b', ret))
+      t.ok(has('noa', ret))
+      t.notOk(has('nob', ret))
+      t.notOk(/(add){6,}/.test(ret))
     }
   },
   {
     flags: { a: false, b: false },
-    callback (result, t) {
-      t.notOk(/(template|script|style):a{5,}/.test(result))
-      t.notOk(/(template|script|style):b{5,}/.test(result))
-      t.notOk(/(add){6,}/.test(result))
+    callback (ret, t) {
+      t.notOk(has('a', ret))
+      t.ok(has('noa', ret))
+      t.notOk(has('b', ret))
+      t.ok(has('nob', ret))
+      t.notOk(/(add){6,}/.test(ret))
     }
   }
-].forEach(({ flags, callback }) => {
-  test('webpack-test: ' + JSON.stringify(flags), t => {
-    webpackTest(flags)
-      .then(result => {
-        callback(result, t)
-        setTimeout(() => t.end())
-      })
-      .catch(err => t.fail(err))
+]
+
+test(chalk.cyan('webpack build test'), t => {
+  buildCases.reduce((c1, c2) => {
+    return Promise.resolve(c1).then(c => build(c.flags).then(ret => c.callback(ret, t) || c2))
+  }).then(() => t.end()).catch(err => t.fail(err))
+})
+
+const { RESOLVED_FLAGS_PATH } = require('../lib/constants')
+const watchCases = [
+  {
+    flags: { a: true, b: false },
+    callback (ret, t) {
+      t.equal(JSON.stringify(require(RESOLVED_FLAGS_PATH)), JSON.stringify(this.flags))
+      t.ok(has('a', ret, true))
+      t.notOk(has('b', ret, true))
+      t.notOk(has('noa', ret, true))
+      t.ok(has('nob', ret, true))
+      t.ok(/script:a{5,}/.test(ret)) // because watch mode uses ProvidePlugin
+      t.ok(/(add){6,}/.test(ret))
+    }
+  },
+  {
+    flags: { a: false, b: true },
+    callback (ret, t) {
+      clearModule(RESOLVED_FLAGS_PATH)
+      t.equal(JSON.stringify(require(RESOLVED_FLAGS_PATH)), JSON.stringify(this.flags))
+      t.notOk(has('a', ret, true))
+      t.notOk(has('nob', ret, true))
+      t.ok(has('noa', ret, true))
+      t.ok(has('b', ret, true))
+      t.ok(/script:a{5,}/.test(ret)) // because watch mode uses ProvidePlugin
+      t.notOk(/(add){6,}/.test(ret))
+    }
+  },
+  {
+    flags: { a: false, b: false },
+    callback (ret, t) {
+      clearModule(RESOLVED_FLAGS_PATH)
+      t.equal(JSON.stringify(require(RESOLVED_FLAGS_PATH)), JSON.stringify(this.flags))
+      t.notOk(has('a', ret, true))
+      t.ok(has('noa', ret, true))
+      t.ok(has('nob', ret, true))
+      t.notOk(has('b', ret, true))
+      t.notOk(/(add){6,}/.test(ret))
+    }
+  },
+  {
+    flags: { a: true, b: true },
+    callback (ret, t) {
+      clearModule(RESOLVED_FLAGS_PATH)
+      t.equal(JSON.stringify(require(RESOLVED_FLAGS_PATH)), JSON.stringify(this.flags))
+      t.ok(has('a', ret, true))
+      t.notOk(has('noa', ret, true))
+      t.notOk(has('nob', ret, true))
+      t.ok(has('b', ret, true))
+      t.ok(/(add){6,}/.test(ret))
+    }
+  }
+]
+
+test(chalk.cyan('webpack watch test'), t => {
+  let index = 0
+  const eventEmitter = dev(watchCases[index].flags)
+  eventEmitter.on('error', err => t.fail(err))
+  eventEmitter.on('done', ret => {
+    // tape can not catch error in custom callback
+    try {
+      watchCases[index].callback(ret, t)
+    } catch (err) { t.fail(err) }
+    if (!watchCases[++index]) {
+      eventEmitter.emit('close', () => t.end())
+    } else {
+      eventEmitter.emit('update', watchCases[index].flags)
+    }
   })
 })

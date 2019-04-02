@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <h3>{{title}}</h3>
-    <section v-if-flag="a">  template:aaaaaaaaaaaaaaa  </section>
-    <div v-else-flag> template:noaaaaaaaaaaaaaaaaaaaaaa  </div>
+    <section v-if-flag="a">  template:aaaaaaaaaaaaaaaaa  </section>
+    <div v-else-flag> template:noaaaaaaaaaaaaaaaaaaaa  </div>
     <my-app></my-app>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
   data() {
     let title
     if (VueFlags.a) {
-      title = 'script:aaaaaaaaaaaaaaaaaaaaaa'
+      title = 'script:aaaaaaaaaaaaaaaaaaaaa'
     } else {
       title = 'script:noaaaaaaaaaaaaaaaaaaa'
     }
@@ -30,7 +30,7 @@ export default {
 
 <style scoped>
 .container {
-  background-color: chocolate;
+  background-color: red;
 }
 
 @supports (--flag: a) {
@@ -39,7 +39,7 @@ export default {
   }
 }
 
-@supports not(--flag: a) {
+@supports not (--flag: a) {
   h3:after {
     content: 'style:noaaaaaaaaaaaaaaaa';
   }

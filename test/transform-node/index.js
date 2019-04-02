@@ -4,8 +4,7 @@ const {
   staticKeys
 } = require('../../lib/transform-node')
 
-const templates = require('./templates')
-const loadCompiler = require('./loadCompiler')
+const loadCompiler = require('../utils/loadCompiler')
 const test = require('tape')
 const chalk = require('chalk')
 
@@ -22,7 +21,7 @@ function compareArray (a1, a2) {
   return a1.every(v => a2.includes(v))
 }
 
-function genFlags (seeds, num = 15) {
+function genFlags (seeds, num) {
   if (typeof seeds === 'string') {
     const flags = seeds.split('_')
     const flagMap = {}
@@ -43,13 +42,14 @@ function genFlags (seeds, num = 15) {
   return ret
 }
 
-function runTest ({ parseComponent, compile }, version, templateName, num) {
+function runTest ({ parseComponent, compile }, version, template) {
   const {
     template: { content: html, attrs: { title, flags } }
-  } = parseComponent(templates[templateName])
+  } = parseComponent(template)
   const allTexts = collectTexts(html)
+  const num = flags ? 1 : 16
   const flagsList = flags ? genFlags(flags) : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], num)
-  test(chalk.cyan(`${templateName}/${title}@${version}`), t => {
+  test(chalk.cyan(`${title}@${version}`), t => {
     flagsList.forEach(flags => {
       const { render, staticRenderFns, errors } = compile(html, {
         outputSourceRange: true,
@@ -71,19 +71,11 @@ function runTest ({ parseComponent, compile }, version, templateName, num) {
   })
 }
 
-function runTests(compiler, version) {
-  Object.keys(templates).forEach(name => {
-    runTest(compiler, version, name)
-  })
-}
-
-module.exports = {
-  loadCompiler, runTest, runTests
-}
+module.exports = runTest
 
 if (require.main === module) {
   const version = '2.6.10'
   loadCompiler(version).then(compiler => {
-    runTest(compiler, version, 'dev', 1)
+    runTest(compiler, version, require('./templates').dev)
   })
 }
