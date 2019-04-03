@@ -40,7 +40,7 @@ const buildCases = [
   }
 ]
 
-test(chalk.cyan('webpack build test'), t => {
+test(chalk.cyan('webpack-test:build'), t => {
   buildCases.reduce((c1, c2) => {
     return Promise.resolve(c1).then(c => build(c.flags).then(ret => c.callback(ret, t) || c2))
   }).then(() => t.end()).catch(err => t.fail(err))
@@ -99,7 +99,7 @@ const watchCases = [
   }
 ]
 
-test(chalk.cyan('webpack watch test'), t => {
+test(chalk.cyan('webpack-test:watch'), t => {
   let index = 0
   const eventEmitter = dev(watchCases[index].flags)
   eventEmitter.on('error', err => t.fail(err))

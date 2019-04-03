@@ -6,7 +6,7 @@ const chalk = require('chalk')
 const path = require('path')
 
 const loadCompiler = require('./utils/loadCompiler')
-const getTemplates = require('./utils/templates')
+const getTemplates = require('./utils/loadTemplates')
 
 test(chalk.cyan('postcss-plugin:exp'), t => {
   const main = params => {

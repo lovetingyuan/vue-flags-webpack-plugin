@@ -10,6 +10,7 @@
   + remove vue `htmlparser` and use `compilerOptions.modules` to transform flag directives
   + use loader instead of plugin to ignore files(modules)
   + `namespace` is required now
+  + postcss plugin supports nest `@supports`
   + fix bugs and better error tips and performance improvement
 
 ### v0.2.0

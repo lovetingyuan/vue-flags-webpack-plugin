@@ -76,6 +76,15 @@ module.exports = runTest
 if (require.main === module) {
   const version = '2.6.10'
   loadCompiler(version).then(compiler => {
-    runTest(compiler, version, require('./templates').dev)
+    runTest(compiler, version, `
+    <div>
+      <img>
+      <div v-if="foo" slot="aaaa" slot-scope="foo">_aaa1--</div>
+      <div v-else-if="foo" slot="bbbb" slot-scope="bar" v-if-flag="a">__a1-- {{bar}}</div>
+      <div v-else slot="ccccc" slot-scope="far" v-elif-flag="c" :title="far">__a0_c1--</div>
+      <p slot="ddddd" slot-scope="boo" v-else-flag>__a0_c0-- {{boo}}</p>
+      <span></span>
+    </div>
+    `)
   })
 }
