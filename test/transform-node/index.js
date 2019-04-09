@@ -44,28 +44,59 @@ function genFlags (seeds, num) {
 
 function runTest ({ parseComponent, compile }, version, template) {
   const {
-    template: { content: html, attrs: { title, flags } }
+    template: { content: html, attrs: { title, flag, error = 0, tip = 0 } }
   } = parseComponent(template)
   const allTexts = collectTexts(html)
-  const num = flags ? 1 : 16
-  const flagsList = flags ? genFlags(flags) : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], num)
+  const flagsList = typeof flag === 'string'
+    ? genFlags(flag)
+    : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], typeof flag === 'boolean' ? 1 : 16)
   test(chalk.cyan(`${title}@${version}`), t => {
     flagsList.forEach(flags => {
-      const { render, staticRenderFns, errors } = compile(html, {
+      const { render, staticRenderFns, errors, tips } = compile(html, {
         outputSourceRange: true,
         modules: [{
           staticKeys,
           preTransformNode,
           postTransformNode (ast, option) {
+            if (!ast.parent) {
+              'noop' // eslint-disable-line
+            }
             postTransformNode(ast, option, { flags: flags._map })
+            if (!ast.parent) {
+              'noop' // eslint-disable-line
+            }
           }
         }]
       })
       const result = render + staticRenderFns
-      t.ok(errors.length === 0 && !/v-(if|else|elif)-flag/.test(result), 'no errors and v-*-flag dirs')
-      const retOfCompiler = collectTexts(result)
-      const retOfTest = allTexts.filter(text => text.split('_').every(t => flags.includes(t)))
-      t.ok(compareArray(retOfCompiler, retOfTest), 'passed for ' + chalk.green(flags))
+      if (error || tip) {
+        if (error) {
+          const expextedErrors = eval(`([${error}])`) // eslint-disable-line
+          t.ok(
+            expextedErrors.length === errors.length && errors.every(({ msg }, i) => {
+              return msg.indexOf(expextedErrors[i]) > 0
+            }),
+            'errors match expect: ' + errors.length
+          )
+        }
+        if (tip) {
+          const expextedTips = eval(`([${tip}])`) // eslint-disable-line
+          t.ok(
+            expextedTips.length === tips.length && tips.every(({ msg }, i) => {
+              return msg.indexOf(expextedTips[i]) > 0
+            }),
+            'tips match expect: ' + tips.length
+          )
+        }
+      } else {
+        t.notOk(
+          errors.length || tips.length || /v-(if|else|elif)-flag/.test(result),
+          'no errors and v-*-flag dirs'
+        )
+        const retOfCompiler = collectTexts(result)
+        const retOfTest = allTexts.filter(text => text.split('_').every(t => flags.includes(t)))
+        t.ok(compareArray(retOfCompiler, retOfTest), 'passed for ' + chalk.green(flags))
+      }
     })
     t.end()
   })
@@ -73,18 +104,36 @@ function runTest ({ parseComponent, compile }, version, template) {
 
 module.exports = runTest
 
+/* eslint-disable */
 if (require.main === module) {
-  const version = '2.6.10'
+  const version = '2.5.12'
   loadCompiler(version).then(compiler => {
-    runTest(compiler, version, `
+    // runTest(compiler, version, `
+    // <template title="development" flag error="">
+    // <div>
+    //   <div v-if-flag="a"></div>{{sdf}} d
+    //   <div v-else-flag></div>
+    // </div>
+    // </template>
+    // `)
+    const { render, staticRenderFns, errors, tips } = compiler.compile(`
     <div>
-      <img>
-      <div v-if="foo" slot="aaaa" slot-scope="foo">_aaa1--</div>
-      <div v-else-if="foo" slot="bbbb" slot-scope="bar" v-if-flag="a">__a1-- {{bar}}</div>
-      <div v-else slot="ccccc" slot-scope="far" v-elif-flag="c" :title="far">__a0_c1--</div>
-      <p slot="ddddd" slot-scope="boo" v-else-flag>__a0_c0-- {{boo}}</p>
-      <span></span>
+      <div v-if="sdfsa" v-if-flag="a" slot="2343" slot-scope="xsddf"></div>
+      <span  v-elif-flag="v" slot="aa" slot-scope="dsfsdf"></span>
+         <p slot="ggg" v-elif-flag="b">222222</p>
     </div>
-    `)
+    `, {
+      outputSourceRange: true,
+      modules: [{
+        // staticKeys,
+        preTransformNode,
+        postTransformNode (ast, option) {
+          if (!ast.parent) {
+            debugger
+          }
+          // postTransformNode(ast, option, { flags: flags._map })
+        }
+      }]
+    })
   })
 }

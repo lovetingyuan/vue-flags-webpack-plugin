@@ -15,13 +15,17 @@ const tpls = [
   'basic',
   'nest',
   'condition',
+  'for',
   'slot'
-  // 'dev'
+  // 'error-next'
 ]
 
 Promise.all(versions.map(v => loadCompiler(v))).then(compilers => {
   const templates = getTemplates(path.join(__dirname, 'transform-node'))
   compilers.forEach((compiler, i) => {
+    if (!tpls.length) {
+      tpls.push(...Object.keys(templates))
+    }
     tpls.forEach(name => runTest(compiler, versions[i], templates[name]))
   })
 }).catch(err => {
