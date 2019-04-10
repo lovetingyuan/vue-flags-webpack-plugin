@@ -58,34 +58,28 @@ function runTest ({ parseComponent, compile }, version, template) {
           staticKeys,
           preTransformNode,
           postTransformNode (ast, option) {
-            if (!ast.parent) {
-              'noop' // eslint-disable-line
-            }
             postTransformNode(ast, option, { flags: flags._map })
-            if (!ast.parent) {
-              'noop' // eslint-disable-line
-            }
           }
         }]
       })
       const result = render + staticRenderFns
       if (error || tip) {
         if (error) {
-          const expextedErrors = eval(`([${error}])`) // eslint-disable-line
           t.ok(
-            expextedErrors.length === errors.length && errors.every(({ msg }, i) => {
-              return msg.indexOf(expextedErrors[i]) > 0
+            errors.some((err) => {
+              const msg = typeof err === 'string' ? err : err.msg
+              return msg.indexOf(error) > 0
             }),
-            'errors match expect: ' + errors.length
+            'errors match expect: ' + error
           )
         }
         if (tip) {
-          const expextedTips = eval(`([${tip}])`) // eslint-disable-line
           t.ok(
-            expextedTips.length === tips.length && tips.every(({ msg }, i) => {
-              return msg.indexOf(expextedTips[i]) > 0
+            tips.some((err) => {
+              const msg = typeof err === 'string' ? err : err.msg
+              return msg.indexOf(tip) > 0
             }),
-            'tips match expect: ' + tips.length
+            'tips match expect: ' + tip
           )
         }
       } else {
@@ -106,7 +100,7 @@ module.exports = runTest
 
 /* eslint-disable */
 if (require.main === module) {
-  const version = '2.5.12'
+  const version = '2.6.10'
   loadCompiler(version).then(compiler => {
     // runTest(compiler, version, `
     // <template title="development" flag error="">
@@ -118,20 +112,23 @@ if (require.main === module) {
     // `)
     const { render, staticRenderFns, errors, tips } = compiler.compile(`
     <div>
-      <div v-if="sdfsa" v-if-flag="a" slot="2343" slot-scope="xsddf"></div>
-      <span  v-elif-flag="v" slot="aa" slot-scope="dsfsdf"></span>
-         <p slot="ggg" v-elif-flag="b">222222</p>
-    </div>
+    <h1 slot-scope="dsf">this is title</h1>
+    <ul v-slot>
+
+    </ul>
+  </div>
     `, {
       outputSourceRange: true,
       modules: [{
         // staticKeys,
-        preTransformNode,
+        preTransformNode(ast) {
+          debugger
+        },
         postTransformNode (ast, option) {
           if (!ast.parent) {
             debugger
           }
-          // postTransformNode(ast, option, { flags: flags._map })
+          // postTransformNode(ast, option, { flags: { a: true } })
         }
       }]
     })

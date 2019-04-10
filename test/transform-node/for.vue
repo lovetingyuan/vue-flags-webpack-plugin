@@ -4,7 +4,7 @@
       __a1-- {{a}}
     </div>
     <div v-for="c in d" :key="c" v-elif-flag="b">
-      __a0_b1-- {{a}}
+      __a0_b1-- {{c}}
       <p v-if-flag="c">__a0_b1_c1--</p>
       <img v-else-flag src="__a0_b1_c0--">
     </div>

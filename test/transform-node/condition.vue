@@ -14,14 +14,22 @@
       <img src="" alt="">
       <div v-if-flag="c"> __c1-- </div>
       <span v-else-flag>__c0--</span>
-    </div> 
+    </div>
 
     <div v-else>
-      <ul v-if-flag="f">
-        <span v-if="aaa">aaa</span>
-        <li v-if-flag="d" v-else-if="bbb">__f1_d1--</li>
-        <li v-elif-flag="e" v-else>__f1_d0_e1--</li>
-        <li v-else-flag>__f1_d0_e0--</li>
+      <ul v-if-flag="e">
+        <template v-if-flag="d">
+          <li v-if="aaa">__e1_d1--</li>
+          <li v-else-if="bbb">
+
+            <div v-if-flag="f">__e1_d1_f1--</div>
+
+                      <div v-elif-flag="a">__e1_d1_f0_a1--</div>
+<slot></slot>
+          </li>
+          <li v-else></li>
+        </template>
+        <li v-else-flag>__e1_d0--</li>
       </ul>
     </div>
   </section>

@@ -56,7 +56,7 @@ const watchCases = [
       t.notOk(has('b', ret, true))
       t.notOk(has('noa', ret, true))
       t.ok(has('nob', ret, true))
-      t.ok(/script:a{5,}/.test(ret)) // because watch mode uses ProvidePlugin
+      t.ok(/script:a{6,}/.test(ret)) // because watch mode uses ProvidePlugin
       t.ok(/(add){6,}/.test(ret))
     }
   },
@@ -69,7 +69,7 @@ const watchCases = [
       t.notOk(has('nob', ret, true))
       t.ok(has('noa', ret, true))
       t.ok(has('b', ret, true))
-      t.ok(/script:a{5,}/.test(ret)) // because watch mode uses ProvidePlugin
+      t.ok(/script:a{6,}/.test(ret)) // because watch mode uses ProvidePlugin
       t.notOk(/(add){6,}/.test(ret))
     }
   },

@@ -11,11 +11,22 @@
         <span v-else-flag>__b1_d0--</span>
       </template>
       <span v-else-flag slot="foot">
-        <span v-if-flag="a">__b0_a1--</span>
-        <span v-else-flag>__b0_a0--</span>
+        <span v-if-flag="c">__b0_c1--</span>
+        <span v-else-flag>__b0_c0--</span>
       </span>
     </hello>
+    <div slot="bar">
+      <my-app>
 
+        <slot name="foo" v-if-flag="b">
+          <a v-if-flag="f">       __b1_f1--     </a>
+          <img v-elif-flag="a" src="__b1_f0_a1--">
+        </slot>
+        <section v-elif-flag="a">__b0_a1--</section>
+        <slot v-else-flag>__b0_a0--</slot>
+      </my-app>
+
+    </div>
   </div>
 </template>
 

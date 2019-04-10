@@ -5,19 +5,24 @@ const getTemplates = require('./utils/loadTemplates')
 const path = require('path')
 
 const versions = [
-  'latest',
   '2.5.12',
   '2.5.17',
   '2.6.0',
-  '2.6.10'
+  '2.6.10',
+  'latest'
 ]
+
 const tpls = [
-  'basic',
-  'nest',
-  'condition',
-  'for',
-  'slot'
-  // 'error-next'
+  // 'basic',
+  // 'nest',
+  // 'condition',
+  // 'for',
+  // 'slot',
+  // 'slot-scope',
+  // 'error-next',
+  // 'error-missing',
+  // 'error-condition',
+  // 'error-slot'
 ]
 
 Promise.all(versions.map(v => loadCompiler(v))).then(compilers => {
