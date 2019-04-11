@@ -10,7 +10,10 @@ module.exports = async function loadCompiler (version = 'latest') {
   const cachePath = createCachePath('tests', `vue-template-compiler-${version}.js`)
   if (fse.pathExistsSync(cachePath)) {
     try {
-      return require(cachePath)
+      const compiler = require(cachePath)
+      if ('parseComponent' in compiler) {
+        return compiler
+      }
     } catch (e) {}
   }
   await fse.ensureFile(cachePath)

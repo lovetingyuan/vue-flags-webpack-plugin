@@ -17,7 +17,26 @@
 
     <component v-if-flag="d" :is="helloworld">
       __d1--
+      <transition-group tag="ul" name="__d1_e1--" v-if-flag="e">
+        <li v-for="item in items" :key="item.id" v-if-flag="f">
+          {{ item.text }} __d1_e1_f1--
+        </li>
+        <span v-else-flag title="__d1_e1_f0--"></span>
+      </transition-group>
+      <img v-elif-flag="a" src="__d1_e0_a1--">
     </component>
     <span v-else-flag>__d0--</span>
+
+    <div>
+      <div v-for="a in b" :key="a" v-if-flag="f">
+        __f1-- {{a}}
+      </div>
+      <div v-for="c in d" :key="c" v-elif-flag="b">
+        __f0_b1-- {{c}}
+        <p v-if-flag="c">__f0_b1_c1--</p>
+        <img v-else-flag src="__f0_b1_c0--">
+      </div>
+      <span v-else-flag>__f0_b0--</span>
+    </div>
   </div>
 </template>

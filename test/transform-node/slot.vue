@@ -10,10 +10,10 @@
         <span v-if-flag="d">__b1_d1--</span>
         <span v-else-flag>__b1_d0--</span>
       </template>
-      <span v-else-flag slot="foot">
+      <slot v-else-flag slot="foot">
         <span v-if-flag="c">__b0_c1--</span>
         <span v-else-flag>__b0_c0--</span>
-      </span>
+      </slot>
     </hello>
     <div slot="bar">
       <my-app>

@@ -48,7 +48,7 @@ function runTest ({ parseComponent, compile }, version, template) {
   } = parseComponent(template)
   const allTexts = collectTexts(html)
   const flagsList = typeof flag === 'string'
-    ? genFlags(flag)
+    ? (Number(flag) + '' === flag ? genFlags(['a', 'b', 'c', 'd', 'e', 'f'], Math.pow(2, +flag)) : genFlags(flag))
     : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], typeof flag === 'boolean' ? 1 : 16)
   test(chalk.cyan(`${title}@${version}`), t => {
     flagsList.forEach(flags => {
@@ -112,17 +112,26 @@ if (require.main === module) {
     // `)
     const { render, staticRenderFns, errors, tips } = compiler.compile(`
     <div>
-    <h1 slot-scope="dsf">this is title</h1>
-    <ul v-slot>
-
-    </ul>
+    <span v-if-flag="b">__b1--</span>
+    <section v-elif-flag="c"> __b0_c1--
+      <slot name="aaa" v-if-flag="f">__b0_c1_f1--</slot>
+      <img v-else-flag src="__b0_c1_f0--">
+      <span v-if-flag="e" slot-scope="ABC" slot="Boo">
+        __b0_c1_e1-- {{ABC}}
+      </span>
+      <div slot-scope="Bar" v-if-flag="d">{{Bar}} __b0_c1_d1--</div>
+    </section>
+    <div slot="foo" slot-scope="Foo" :title="Foo" v-if-flag="d">
+      <span v-if-flag="a"> __d1_a1--</span>
+      <p v-else-flag>__d1_a0--</p>
+    </div>
   </div>
     `, {
       outputSourceRange: true,
       modules: [{
         // staticKeys,
-        preTransformNode(ast) {
-          debugger
+        preTransformNode(ast, options) {
+          return preTransformNode(ast, options)
         },
         postTransformNode (ast, option) {
           if (!ast.parent) {
