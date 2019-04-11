@@ -38,7 +38,7 @@ const tpls = [
   // 'slot-scope',
   // 'error-next',
   // 'error-missing',
-  // 'error-condition',
+  // 'error-condition'
   // 'error-slot'
 ]
 

@@ -102,34 +102,19 @@ module.exports = runTest
 if (require.main === module) {
   const version = '2.6.10'
   loadCompiler(version).then(compiler => {
-    // runTest(compiler, version, `
-    // <template title="development" flag error="">
-    // <div>
-    //   <div v-if-flag="a"></div>{{sdf}} d
-    //   <div v-else-flag></div>
-    // </div>
-    // </template>
-    // `)
-    const { render, staticRenderFns, errors, tips } = compiler.compile(`
+    const result = compiler.compile(`
     <div>
-    <span v-if-flag="b">__b1--</span>
-    <section v-elif-flag="c"> __b0_c1--
-      <slot name="aaa" v-if-flag="f">__b0_c1_f1--</slot>
-      <img v-else-flag src="__b0_c1_f0--">
-      <span v-if-flag="e" slot-scope="ABC" slot="Boo">
-        __b0_c1_e1-- {{ABC}}
-      </span>
-      <div slot-scope="Bar" v-if-flag="d">{{Bar}} __b0_c1_d1--</div>
-    </section>
-    <div slot="foo" slot-scope="Foo" :title="Foo" v-if-flag="d">
-      <span v-if-flag="a"> __d1_a1--</span>
-      <p v-else-flag>__d1_a0--</p>
+      <ul v-if-flag="f"> __f1--
+        <li v-if="foo" v-if-flag="d">__f1_d1--</li>
+        <li v-if="bar" v-elif-flag="e">__f1_d0_e1--</li>
+        <li v-else-flag title="__f1_d0_e0--"></li>
+      </ul>
+      <template v-else-flag>__f0--</template>
     </div>
-  </div>
     `, {
       outputSourceRange: true,
       modules: [{
-        // staticKeys,
+        staticKeys,
         preTransformNode(ast, options) {
           return preTransformNode(ast, options)
         },
@@ -137,9 +122,10 @@ if (require.main === module) {
           if (!ast.parent) {
             debugger
           }
-          // postTransformNode(ast, option, { flags: { a: true } })
+          postTransformNode(ast, option, { flags: { a: false } })
         }
       }]
     })
+    debugger
   })
 }
