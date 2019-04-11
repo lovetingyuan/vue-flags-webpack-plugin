@@ -1,4 +1,4 @@
-<template title="condition-test">
+<template title="condition-test" tip="Do not use v-*-flag with ">
   <section>
     <!-- test cases with v-if -->
     <h1>this is title</h1>

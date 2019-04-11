@@ -31,15 +31,15 @@ const versions = [
 ]
 
 const tpls = [
-  // 'basic',
-  // 'nest',
-  // 'condition',
-  // 'slot',
-  // 'slot-scope',
-  // 'error-next',
-  // 'error-missing',
-  // 'error-condition'
-  // 'error-slot'
+  'basic',
+  'nest',
+  'condition',
+  'slot',
+  'slot-scope',
+  'error-next',
+  'error-missing',
+  'error-condition',
+  'error-slot'
 ]
 
 Promise.all(versions.map(v => loadCompiler(v))).then(compilers => {
