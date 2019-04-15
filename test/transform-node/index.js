@@ -108,7 +108,7 @@ if (require.main === module) {
     <!-- test cases with v-if -->
     <h1>this is title</h1>
     <div v-if="foo">
-      <div v-if-flag="a && b"> __a1_b1-- </div>
+      <div v-if-flag="as && b"> __a1_b1-- </div>
       <br>
       <a-compoent />
       <span v-if-flag="b"> __b1-- </span><!-- comment -->

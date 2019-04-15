@@ -128,9 +128,9 @@ vue component:
 
 ### attention
 * `v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`
-  - solution: use `<template v-*-flag>` to wrap the condition elements
+  - solution: use `<template v-*-flag>` to wrap the condition elements.
 * `v-else-flag` and `v-elif-flag` can not be used with `scope-slot` or `v-slot`
-  - solution: only use `v-if-flag` on scoped slot element and put all named slots in the front
+  - solution: only use `v-if-flag` on scoped slot element and put all slots in the end.
 
 ### License
 MIT
