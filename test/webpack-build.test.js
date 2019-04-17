@@ -3,13 +3,14 @@ const test = require('tape')
 const chalk = require('chalk')
 const clearModule = require('clear-module')
 
-const has = (flag, result, watch) => {
-  return new RegExp(`(template|${watch ? '' : 'script|'}style):${flag}{5,}`).test(result)
+const has = (flag, result, watch, useVue = true) => {
+  return new RegExp(`(${useVue ? 'template|' : ''}${watch ? '' : 'script|'}style):${flag}{5,}`).test(result)
 }
 
 const buildCases = [
   {
     flags: { a: true, b: false },
+    useVue: true,
     callback (ret, t) {
       t.ok(has('a', ret))
       t.notOk(has('noa', ret))
@@ -20,6 +21,7 @@ const buildCases = [
   },
   {
     flags: { a: false, b: true },
+    useVue: true,
     callback (ret, t) {
       t.notOk(has('a', ret))
       t.ok(has('b', ret))
@@ -30,6 +32,7 @@ const buildCases = [
   },
   {
     flags: { a: false, b: false },
+    useVue: true,
     callback (ret, t) {
       t.notOk(has('a', ret))
       t.ok(has('noa', ret))
@@ -37,12 +40,34 @@ const buildCases = [
       t.ok(has('nob', ret))
       t.notOk(/(add){6,}/.test(ret))
     }
+  },
+  {
+    flags: { a: false, b: true },
+    useVue: false,
+    callback (ret, t) {
+      t.notOk(has('a', ret, false, true))
+      t.ok(has('noa', ret, false, true))
+      t.ok(has('b', ret, false, true))
+      t.notOk(has('nob', ret, false, true))
+      t.notOk(/(add){6,}/.test(ret))
+    }
+  },
+  {
+    flags: { a: true, b: false },
+    useVue: false,
+    callback (ret, t) {
+      t.ok(has('a', ret, false, true))
+      t.notOk(has('noa', ret, false, true))
+      t.notOk(has('b', ret, false, true))
+      t.ok(has('nob', ret, false, true))
+      t.ok(/(add){6,}/.test(ret))
+    }
   }
 ]
 
 test(chalk.cyan('webpack-test:build'), t => {
   buildCases.reduce((c1, c2) => {
-    return Promise.resolve(c1).then(c => build(c.flags).then(ret => c.callback(ret, t) || c2))
+    return Promise.resolve(c1).then(c => build(c.flags, c.useVue).then(ret => c.callback(ret, t) || c2))
   }).then(() => t.end()).catch(err => t.fail(err))
 })
 

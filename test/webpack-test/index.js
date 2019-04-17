@@ -6,17 +6,17 @@ const events = require('events')
 const Fs = require('fs')
 const FlagPlugin = require('../..')
 
-const webpackConfig = (flags, dev) => ({
+const webpackConfig = (flags, dev, useVue) => ({
   context: __dirname,
-  entry: './main.js',
+  entry: useVue ? './main.js' : './main-no-vue.js',
   mode: dev ? 'development' : 'production',
   devtool: false,
   module: {
     rules: [
-      {
+      useVue ? {
         test: /\.vue$/,
         loader: 'vue-loader'
-      },
+      } : null,
       {
         test: /\.css$/,
         loader: 'postcss-loader',
@@ -24,7 +24,7 @@ const webpackConfig = (flags, dev) => ({
           plugins: [FlagPlugin.postcssFlagsPlugin()]
         }
       }
-    ]
+    ].filter(Boolean)
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -40,13 +40,13 @@ const webpackConfig = (flags, dev) => ({
       },
       watch: !!dev
     }),
-    new VueLoaderPlugin()
-  ]
+    useVue ? new VueLoaderPlugin() : null
+  ].filter(Boolean)
 })
 
-function build (flags) {
+function build (flags, useVue) {
   return new Promise((resolve, reject) => {
-    const compiler = webpack(webpackConfig(flags))
+    const compiler = webpack(webpackConfig(flags, false, useVue))
     const fs = compiler.outputFileSystem = new MemoryFileSystem()
     compiler.hooks.failed.tap(FlagPlugin.name, err => reject(err))
     compiler.run((err, stats) => {
@@ -65,7 +65,7 @@ function dev (flags) {
     Fs.writeFileSync(path.join(__dirname, 'flags-test.js'), 'module.exports=' + JSON.stringify(flags))
   }
   writeFlags(flags)
-  const compiler = webpack(webpackConfig(flags, true))
+  const compiler = webpack(webpackConfig(flags, true, true))
   const { pluginOptions } = compiler.options.plugins.find(p => p instanceof FlagPlugin)
   const fs = compiler.outputFileSystem = new MemoryFileSystem()
   compiler.hooks.done.tap(FlagPlugin.name, stats => {
