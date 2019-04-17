@@ -7,6 +7,7 @@ const {
 const loadCompiler = require('../utils/loadCompiler')
 const test = require('tape')
 const chalk = require('chalk')
+const semver = require('semver')
 
 function collectTexts (str) {
   const textReg = /__([a-z01_]+?)--/g
@@ -44,8 +45,10 @@ function genFlags (seeds, num) {
 
 function runTest ({ parseComponent, compile }, version, template) {
   const {
-    template: { content: html, attrs: { title, flag, error = 0, tip = 0 } }
+    template: { content: html, attrs }
   } = parseComponent(template)
+  const { title, flag, error = 0, tip = 0, 'min-version': minVersion } = attrs
+  if (version !== 'latest' && minVersion && semver.lt(version, minVersion)) return
   const allTexts = collectTexts(html)
   const flagsList = typeof flag === 'string'
     ? (Number(flag) + '' === flag ? genFlags(['a', 'b', 'c', 'd', 'e', 'f'], Math.pow(2, +flag)) : genFlags(flag))
@@ -104,48 +107,20 @@ if (require.main === module) {
   const version = '2.6.10'
   loadCompiler(version).then(compiler => {
     const result = compiler.compile(`
-    <section>
-    <!-- test cases with v-if -->
-    <h1>this is title</h1>
-    <div v-if="foo">
-      <div v-if-flag="a && b"> __a1_b1-- </div>
-      <br>
-      <a-compoent />
-      <span v-if-flag="b"> __b1-- </span><!-- comment -->
-
-      <span v-elif-flag="c && !d"> __b0_c1_d0--</span>
-    </div>
-    <div v-else-if="bar">
-      <img src="" alt="">
-      <div v-if-flag="c"> __c1-- </div>
-      <span v-else-flag>__c0--</span>
-    </div>
-
-    <div v-else>
-      <ul v-if-flag="f"> __f1--
-        <li v-if="foo" v-if-flag="d">__f1_d1--</li>
-        <li v-if="bar" v-elif-flag="e">__f1_d0_e1--</li>
-        <li v-else-flag title="__f1_d0_e0--"></li>
-      </ul>
-      <template v-else-flag>__f0--</template>
-      <div v-if="boo">
-        <section v-if="foo"></section>
-        <section v-else-if="bar" v-if-flag="e">__e1--</section>
-        <section v-else-flag>__e0--</section>
-      </div>
-      <div v-else v-if-flag="d">
-        <section v-if="far">__d1--</section>
-        <section v-else-if="bar" v-if-flag="a">__d1_a1--</section>
-        <section v-else v-else-flag>__d1_a0--</section>
-      </div>
-      <div v-else-flag> __d0--
-        <div v-if-flag="a">__d0_a1--</div>
-        <section v-if="far" v-elif-flag="b">__d0_a0_b1--</section>
-        <section v-elif-flag="f">__d0_a0_b0_f1--</section>
-        <section v-if="boo" v-else-flag>__d0_a0_b0_f0--</section>
-      </div>
-    </div>
-  </section>
+   <div>
+    <hello>
+      <template v-slot="b">
+        <span v-if-flag="a">__a1--</span>
+        <span v-else-flag>__a0--</span>
+      </template>
+      <template v-slot:footer></template>
+      <template v-slot:header="a" v-if-flag="b">__b1--</template>
+    </hello>
+    <hello-2 v-slot="foo" v-if-flag="c"> __c1--
+      <span v-if-flag="d">__c1_d1--</span>
+      <span v-elif-flag="e">__c1_d0_e1--</span>
+    </hello-2>
+   </div>
     `, {
       outputSourceRange: true,
       modules: [{
@@ -155,7 +130,7 @@ if (require.main === module) {
           if (!ast.parent) {
             debugger
           }
-          postTransformNode(ast, option, { flags: { a: false } })
+          postTransformNode(ast, option, { flags: { a: false, b: true, c: false, d: true, e: false } })
         }
       }]
     })

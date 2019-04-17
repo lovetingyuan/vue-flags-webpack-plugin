@@ -30,23 +30,30 @@ const versions = [
   'latest'
 ]
 
-const tpls = [
-  'basic',
-  'nest',
-  'condition',
-  'slot',
-  'slot-scope',
-  'error-next',
-  'error-missing',
-  'error-condition',
-  'error-slot'
+let tpls = [
+  // 'basic',
+  // 'nest',
+  // 'condition',
+  // 'slot',
+  // 'slot-scope',
+  // 'error-next',
+  // 'error-missing',
+  // 'error-condition',
+  // 'error-slot2',
+  'slot-dir'
+  // 'any'
 ]
+
+const testAll =
+  true ||
+  require('is-ci')
 
 Promise.all(versions.map(v => loadCompiler(v))).then(compilers => {
   const templates = getTemplates(path.join(__dirname, 'transform-node'))
+  const tmpls = Object.keys(templates)
   compilers.forEach((compiler, i) => {
-    if (!tpls.length) {
-      tpls.push(...Object.keys(templates))
+    if (testAll) {
+      tpls = tmpls
     }
     tpls.forEach(name => runTest(compiler, versions[i], templates[name]))
   })

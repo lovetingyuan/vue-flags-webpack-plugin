@@ -1,4 +1,4 @@
-<template title="condition-test" tip="Do not use v-*-flag with ">
+<template title="condition-test" tip="Do not use v-*-flag with">
   <section>
     <!-- test cases with v-if -->
     <h1>this is title</h1>
@@ -39,6 +39,8 @@
         <section v-elif-flag="f">__d0_a0_b0_f1--</section>
         <section v-if="boo" v-else-flag>__d0_a0_b0_f0--</section>
       </div>
+      <ul v-if="list" v-if-flag="a">__a1--</ul>
+      <img v-else-flag src="__a0--">
     </div>
   </section>
 </template>
