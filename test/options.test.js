@@ -16,7 +16,7 @@ test(chalk.cyan('options test:valid'), t => {
     {
       namespace: 'N',
       flags: { foo: true },
-      files: { foo: /a/ }
+      ignoreFiles: { foo: /a/ }
     },
     {
       namespace: 'N',
@@ -66,7 +66,7 @@ test(chalk.cyan('options test:invalid'), t => {
   }, {
     flags: { a: true },
     namespace: 'D',
-    files: { a: /s/, '#fb': /ss/ },
+    ignoreFiles: { a: /s/, '#fb': /ss/ },
     msg: /Invalid flag value/
   }, {
     flags: ['aaaaaaaa', 'bbb'],

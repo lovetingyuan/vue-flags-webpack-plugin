@@ -35,7 +35,7 @@ const webpackConfig = (flags, dev, useVue) => ({
     new FlagPlugin({
       flags: dev ? './flags-test.js' : flags,
       namespace: 'VueFlags',
-      files: {
+      ignoreFiles: {
         a: /add\.js$/
       },
       watch: !!dev

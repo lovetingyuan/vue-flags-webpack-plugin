@@ -34,7 +34,7 @@ options:
   + support to modify flags and reload your app when this option is `true`.
   + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
   + Note that `flags` must be a file(directory) path when this options is `true`.
-* `files` (object, default: {})
+* `ignoreFiles` (object, default: {})
   + a plain object that use flag name or expression as key and regexp as value.
   ```javascript
   {
@@ -83,7 +83,7 @@ module.exports = {
       flags: './app-flags.js',
       namespace: 'FLAGS',
       watch: process.env.NODE_ENV === 'development',
-      files: {
+      ignoreFiles: {
         FLAG_B: [/b-related-module\.js$/]
       }
     })
