@@ -14,12 +14,19 @@ npm install vue-flags-webpack-plugin -D
 
 options:
 * `flags` (object|string, required)
-  + a plain object that contains flags value(boolean) or a file(directory) path that exports flags object.
+  + a plain object that contains flags value(boolean).
   ```javascript
-  {
+  flags: {
     FLAG_A: true,
     FLAG_B: false,
   }
+  ```
+  + or a file(directory) path that exports flags object.
+  ```javascript
+  flags: './flags.js',
+  // or
+  // the first value of array('flags.js') must export the final flags object as default!
+  flags: ['./flags.js', './flags-one.js', './flags-two'] //
   ```
 * `namespace` (string, required)
   + used as namespace of flags in JavaScript, must be a valid variable name.
