@@ -107,20 +107,9 @@ if (require.main === module) {
   const version = '2.6.10'
   loadCompiler(version).then(compiler => {
     const result = compiler.compile(`
-   <div>
-    <hello>
-      <template v-slot="b">
-        <span v-if-flag="a">__a1--</span>
-        <span v-else-flag>__a0--</span>
-      </template>
-      <template v-slot:footer></template>
-      <template v-slot:header="a" v-if-flag="b">__b1--</template>
-    </hello>
-    <hello-2 v-slot="foo" v-if-flag="c"> __c1--
-      <span v-if-flag="d">__c1_d1--</span>
-      <span v-elif-flag="e">__c1_d0_e1--</span>
-    </hello-2>
-   </div>
+      <div v-if="false">
+
+      </div>
     `, {
       outputSourceRange: true,
       modules: [{
@@ -131,6 +120,7 @@ if (require.main === module) {
             debugger
           }
           postTransformNode(ast, option, { flags: { a: false, b: true, c: false, d: true, e: false } })
+          console.log(ast)
         }
       }]
     })

@@ -29,18 +29,16 @@ options:
   used as namespace of flags in JavaScript, must be a valid variable name.
 * `watch` (boolean, default: false)
 
-  support to modify flags and reload your app when this option is `true`.
+  Support to modify flags and reload your app when this option is `true`.
 
-  only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
+  Set `true` ONLY in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
 
   Note that `flags` must be a file path when this options is `true`.
 * `ignoreFiles` ({[k: string]: RegExp | RegExp[]})
 
-  A plain object that use flag name or expression as key and regexp as value.
+  A plain object that uses flag name or expression as key and regexp as value.
 
-  Modules will be ignored when it's flag value is false.
-
-  The regular expression will match the absolute path of modules.
+  Modules(absolute path) matched by the regexps will be ignored when the value of flags is `false`.
   ```javascript
   {
     // if FLAG_A is false, a.js will be ignored,
@@ -51,7 +49,7 @@ options:
   ```
 
 ### example
-flags file: `./app-flags.js`
+flags file: `./allFlags.js`
 ```javascript
 module.exports = {
   FLAG_A: true,
@@ -73,7 +71,7 @@ module.exports = {
   },
   plugins: [
     new VueFlagsPlugin({
-      flags: './app-flags.js',
+      flags: './allFlags.js',
       namespace: 'FLAGS',
       watch: process.env.NODE_ENV === 'development',
       ignoreFiles: {
@@ -127,18 +125,18 @@ vue component:
   /**
     You must use "--flag" as custom property name
     see @supports: https://developer.mozilla.org/en-US/docs/Web/CSS/@supports
-    will be transformed as
+    above will be transformed as:
     p { color: yellow; }
     p { color: red; }
   */
 </style>
 ```
 
-### attention
-* ⚠️`v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`.
+### ⚠️ attention
+* `v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`.
 
   💡: use `<template v-*-flag>` to wrap the condition elements.
-* ⚠️`v-else-flag` and `v-elif-flag` can not be used with `scope-slot` or `v-slot`.
+* `v-else-flag` and `v-elif-flag` can not be used with `scope-slot` or `v-slot`.
 
   💡: only use `v-if-flag` on scoped slot element and put all slots in the end.
 
