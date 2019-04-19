@@ -24,7 +24,7 @@ test(chalk.cyan('postcss-plugin:exp'), t => {
     main('not(--flag: foo) and (display: hello)')
   }, / "@supports" can not be used with other properties/)
   t.throws(() => {
-    main('(--flag: foo) and not(--flag: )')
+    main('(--flag: foo) and( not(--flag: ))')
   }, / value of "--flag" is missing /)
   t.end()
 })

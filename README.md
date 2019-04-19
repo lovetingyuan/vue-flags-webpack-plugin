@@ -13,38 +13,42 @@ npm install vue-flags-webpack-plugin -D
 ```
 
 options:
-* `flags` (object|string, required)
-  + a plain object that contains flags value(boolean).
+* `flags` ({[k: string]: boolean} | string, required)
+
+  a plain object that contains flags value(boolean) or a file path that exports flags object.
   ```javascript
   flags: {
     FLAG_A: true,
     FLAG_B: false,
   }
-  ```
-  + or a file(directory) path that exports flags object.
-  ```javascript
-  flags: './flags.js',
   // or
-  // the first value of array('flags.js') must export the final flags object as default!
-  flags: ['./flags.js', './flags-one.js', './flags-two'] //
+  flags: './config/allFlags.js'
   ```
 * `namespace` (string, required)
-  + used as namespace of flags in JavaScript, must be a valid variable name.
+
+  used as namespace of flags in JavaScript, must be a valid variable name.
 * `watch` (boolean, default: false)
-  + support to modify flags and reload your app when this option is `true`.
-  + only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
-  + Note that `flags` must be a file(directory) path when this options is `true`.
-* `ignoreFiles` (object, default: {})
-  + a plain object that use flag name or expression as key and regexp as value.
+
+  support to modify flags and reload your app when this option is `true`.
+
+  only set `true` in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
+
+  Note that `flags` must be a file path when this options is `true`.
+* `ignoreFiles` ({[k: string]: RegExp | RegExp[]})
+
+  A plain object that use flag name or expression as key and regexp as value.
+
+  Modules will be ignored when it's flag value is false.
+
+  The regular expression will match the absolute path of modules.
   ```javascript
   {
     // if FLAG_A is false, a.js will be ignored,
     'FLAG_A': [/a\.js$/],
-    // if FLAG_A is false or FLAG_B is false, a-b.js will be ignored
-    'FLAG_A && FLAG_B': [/a-b\.js$/],
+    // if FLAG_A is false or FLAG_B is true, a-b.js will be ignored
+    'FLAG_A && !FLAG_B': [/a-b\.js$/],
   }
   ```
-  + Note that the regular expression will match the absolute path of modules.
 
 ### example
 flags file: `./app-flags.js`
@@ -61,24 +65,13 @@ const VueFlagsPlugin = require('vue-flags-webpack-plugin');
 const postcssFlagsPlugin = VueFlagsPlugin.postcssFlagsPlugin;
 module.exports = {
   module: {
-    rules: [
-      // ...other rules
-      {
-        test: /\.css$/,
-        use: [
-          'css-loader',
-          {
-            loader: 'postcss-loader',
-            options: {
-              plugins: [postcssFlagsPlugin()]
-            }
-          }
-        ]
-      }
-    ]
+    rules: [{
+      test: /\.css$/,
+      loader: 'postcss-loader',
+      options: { plugins: [postcssFlagsPlugin()] }
+    }]
   },
   plugins: [
-    // ...other plugins
     new VueFlagsPlugin({
       flags: './app-flags.js',
       namespace: 'FLAGS',
@@ -99,6 +92,11 @@ vue component:
     <p v-elif-flag="FLAG_B">{{msg}}</p>
     <p v-else-flag>both feature a and b will be disabled</p>
   </div>
+  <!-- will be transformed as
+  <div>
+    <p>feature a will be enabled</p>
+  </div>
+   -->
 </template>
 
 <script>
@@ -107,7 +105,7 @@ vue component:
     data() {
       return {
         // "FLAGS" as namespace
-        msg: FLAGS.FLAG_B ? 'flag b enable' : '...';
+        msg: FLAGS.FLAG_B ? 'feature b content' : '...';
       }
     },
     mounted() {
@@ -120,24 +118,29 @@ vue component:
 <!-- could also use sc(a)ss, less, stylus, etc. -->
 <style>
   p { color: yellow; }
-  /**
-    You must use "--flag" as custom property name
-    see @supports: https://developer.mozilla.org/en-US/docs/Web/CSS/@supports
-  */
   @supports (--flag: FLAG_A) {
     p { color: red; }
   }
-  @supports not (--flag: FLAG_B) {
+  @supports not ((--flag: FLAG_A) or (--flag: FLAG_B)) {
     p { font-size: 12px; }
   }
+  /**
+    You must use "--flag" as custom property name
+    see @supports: https://developer.mozilla.org/en-US/docs/Web/CSS/@supports
+    will be transformed as
+    p { color: yellow; }
+    p { color: red; }
+  */
 </style>
 ```
 
 ### attention
-* `v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`
-  - solution: use `<template v-*-flag>` to wrap the condition elements.
-* `v-else-flag` and `v-elif-flag` can not be used with `scope-slot` or `v-slot`
-  - solution: only use `v-if-flag` on scoped slot element and put all slots in the end.
+* ⚠️`v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`.
+
+  💡: use `<template v-*-flag>` to wrap the condition elements.
+* ⚠️`v-else-flag` and `v-elif-flag` can not be used with `scope-slot` or `v-slot`.
+
+  💡: only use `v-if-flag` on scoped slot element and put all slots in the end.
 
 ### License
 MIT

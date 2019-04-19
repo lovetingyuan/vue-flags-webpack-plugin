@@ -30,7 +30,7 @@ test(chalk.cyan('options test:valid'), t => {
     },
     {
       namespace: 'N',
-      flags: ['./test/flags.js', __filename]
+      flags: './test/flags.js'
     }
   ].forEach(option => {
     t.equal(validateOptions(option), option)
@@ -59,7 +59,7 @@ test(chalk.cyan('options test:invalid'), t => {
     namespace: ' ',
     msg: /not a valid or available variable/
   }, {
-    flags: './flags.js',
+    flags: './test/flags.js',
     namespace: 'F',
     watch: true,
     msg: /sure only use "watch" in development mode/
@@ -69,9 +69,9 @@ test(chalk.cyan('options test:invalid'), t => {
     ignoreFiles: { a: /s/, '#fb': /ss/ },
     msg: /Invalid flag value/
   }, {
-    flags: ['aaaaaaaa', 'bbb'],
+    flags: 'aaaaaaaa',
     namespace: 'F',
-    msg: /Cannot find module.+?a{5,}/
+    msg: /no such file or directory.+a{5,}/
   }].forEach(option => {
     const msg = option.msg
     delete option.msg
