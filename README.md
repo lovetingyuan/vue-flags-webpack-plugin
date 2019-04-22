@@ -5,7 +5,7 @@ Remove useless code by setting flags(toggles) in .vue SFC file(works with [`vue-
 [![Build Status](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin.svg?branch=master)](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-### usage
+### ⚙ usage
 
 install:
 ```bash
@@ -48,7 +48,7 @@ options:
   }
   ```
 
-### example
+### 🌰 example
 flags file: `./allFlags.js`
 ```javascript
 module.exports = {
