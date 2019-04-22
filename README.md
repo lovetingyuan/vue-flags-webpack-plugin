@@ -117,17 +117,17 @@ vue component:
 <style>
   p { color: yellow; }
   @supports (--flag: FLAG_A) {
-    p { color: red; }
+    p { font-size: 2em; }
   }
   @supports not ((--flag: FLAG_A) or (--flag: FLAG_B)) {
-    p { font-size: 12px; }
+    p { display: none; }
   }
   /**
     You must use "--flag" as custom property name
     see @supports: https://developer.mozilla.org/en-US/docs/Web/CSS/@supports
     above will be transformed as:
     p { color: yellow; }
-    p { color: red; }
+    p { font-size: 2em; }
   */
 </style>
 ```

@@ -1,17 +1,18 @@
 ## vue-flags-webpack-plugin changelog
-### v1.0.0
-* features
-  + add `watch` option to support modify flags in development
-  + `flags` could also be a file or directory path
-  + plugin could be used in non-vue project
-  + support to use js expression as key in `files`
-  + report missing flags both in development and production
-* improvement
-  + remove vue `htmlparser` and use `compilerOptions.modules` to transform flag directives
-  + use loader instead of plugin to ignore files(modules)
-  + `namespace` is required now, change `files` options to `ignoreFiles`
-  + postcss plugin supports nest `@supports`
-  + fix bugs and better error tips and performance improvement
+### v1.0.0 🎉
++ add `watch` option to support modify flags in development
++ `flags` could also be a file path
++ plugin could also be used in non-vue project
++ support to use js expression as key in `ignoreFiles`
++ postcss plugin supports nest `@supports` rules
++ better log output both in development and production
++ use `compilerOptions.modules` instead of `htmlparser` to process template
++ use loader instead of plugin to filter files(modules)
++ option `namespace` is required now
++ option `files` is renamed `ignoreFiles`
++ performance improvement
++ do not support `webpack < 4`, `vue < 2.5.12`, `vue-loader < 15` anymore
++ add lots of UT cases
 
 ### v0.2.0
 * update vue `htmlparser`
