@@ -70,7 +70,7 @@ function runTest ({ parseComponent, compile }, version, template) {
         if (error) {
           t.ok(
             errors.some((err) => {
-              const msg = typeof err === 'string' ? err : err.msg
+              const msg = typeof err === 'string' ? err : err.msg + ''
               return msg.indexOf(error) > 0
             }),
             'errors match expect: ' + error
@@ -79,7 +79,7 @@ function runTest ({ parseComponent, compile }, version, template) {
         if (tip) {
           t.ok(
             tips.some((err) => {
-              const msg = typeof err === 'string' ? err : err.msg
+              const msg = typeof err === 'string' ? err : err.msg + ''
               return msg.indexOf(tip) > 0
             }),
             'tips match expect: ' + tip
