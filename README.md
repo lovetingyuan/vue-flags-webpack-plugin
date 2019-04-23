@@ -15,7 +15,9 @@ npm install vue-flags-webpack-plugin -D
 options:
 * `flags` ({[k: string]: boolean} | string, required)
 
-  a plain object that contains flags value(boolean) or a file path that exports the final flags object.
+  A plain object that contains flags value(boolean).
+
+  Or a file path(will be executed many times!) which exports the final flags object.
   ```javascript
   flags: {
     FLAG_A: true,
@@ -38,7 +40,7 @@ options:
   `watch` could also be an array including extra files paths which will be watched.
   ```javascript
   watch: process.env.NODE_ENV === 'development'
-  // or
+  // or (no need to add extra files in most cases, just set it true)
   watch: [ './config/flag1.js', './config/flag2.js' ]
   ```
 
