@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'TEST'
+
 const runTest = require('./transform-node')
 const loadCompiler = require('./utils/loadCompiler')
 const getTemplates = require('./utils/loadTemplates')

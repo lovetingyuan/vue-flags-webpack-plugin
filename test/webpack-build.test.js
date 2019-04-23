@@ -1,3 +1,17 @@
+const Module = require('module')
+const rfp = Module._resolveFilename
+const mmap = [
+  'webpack', 'vue-loader', 'vue-loader/lib/plugin', 'vue-template-compiler/package.json'
+].reduce((k1, k2) => {
+  k1[k2] = require.resolve(k2)
+  return k1
+}, {})
+
+Module._resolveFilename = function _resolveFilename (req, ...args) {
+  if (req in mmap) return mmap[req]
+  return rfp.call(this, req, ...args)
+}
+
 const { build, dev } = require('./webpack-test')
 const test = require('tape')
 const chalk = require('chalk')

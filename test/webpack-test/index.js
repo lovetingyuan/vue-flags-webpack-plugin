@@ -1,10 +1,10 @@
-const webpack = require('webpack')
 const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MemoryFileSystem = require('memory-fs')
 const events = require('events')
 const Fs = require('fs')
 const FlagPlugin = require('../..')
+const webpack = require(path.resolve(__dirname, '../node_modules/webpack'))
 
 const webpackConfig = (flags, dev, useVue) => ({
   context: __dirname,

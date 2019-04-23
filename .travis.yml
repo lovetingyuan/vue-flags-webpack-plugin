@@ -7,6 +7,6 @@ node_js:
 env:
     - TEST=true
 install:
-    - npm install
+    - cd test && npm install && cd .. && npm install
 script:
     - npm test
