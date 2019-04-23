@@ -15,7 +15,7 @@ npm install vue-flags-webpack-plugin -D
 options:
 * `flags` ({[k: string]: boolean} | string, required)
 
-  a plain object that contains flags value(boolean) or a file path that exports flags object.
+  a plain object that contains flags value(boolean) or a file path that exports the final flags object.
   ```javascript
   flags: {
     FLAG_A: true,
@@ -27,24 +27,32 @@ options:
 * `namespace` (string, required)
 
   used as namespace of flags in JavaScript, must be a valid variable name.
-* `watch` (boolean, default: false)
+* `watch` (boolean | string[], default: false)
 
-  Support to modify flags and reload your app when this option is `true`.
+  Support to modify flags and reload your app when this option is set.
 
-  Set `true` ONLY in development mode, eg: `watch: process.env.NODE_ENV === 'development'`.
+  Set this option ONLY in development mode.
 
-  Note that `flags` must be a file path when this options is `true`.
+  If `watch` is `true`, option `flags` must be a file path.
+
+  `watch` could also be an array including extra files paths which will be watched.
+  ```javascript
+  watch: process.env.NODE_ENV === 'development'
+  // or
+  watch: [ './config/flag1.js', './config/flag2.js' ]
+  ```
+
 * `ignoreFiles` ({[k: string]: RegExp | RegExp[]})
 
   A plain object that uses flag name or expression as key and regexp as value.
 
   Modules(absolute path) matched by the regexps will be ignored when the value of flags is `false`.
   ```javascript
-  {
+  ignoreFiles: {
     // if FLAG_A is false, a.js will be ignored,
     'FLAG_A': [/a\.js$/],
     // if FLAG_A is false or FLAG_B is true, a-b.js will be ignored
-    'FLAG_A && !FLAG_B': [/a-b\.js$/],
+    'FLAG_A && !FLAG_B': [/a-not-b\.js$/],
   }
   ```
 

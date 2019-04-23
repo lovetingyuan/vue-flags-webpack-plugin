@@ -1,6 +1,7 @@
 const test = require('tape')
 const chalk = require('chalk')
 process.env.NODE_ENV = 'TEST'
+
 const { setOptions, validateOptions } = require('../lib/resolve-options')
 
 test(chalk.cyan('options test:valid'), t => {
@@ -20,21 +21,44 @@ test(chalk.cyan('options test:valid'), t => {
     },
     {
       namespace: 'N',
+      flags: { foo: true },
+      ignoreFiles: { foo: [/a/] }
+    },
+    {
+      namespace: 'N',
+      flags: { foo: true },
+      ignoreFiles: { foo: [] }
+    },
+    {
+      namespace: 'N',
       flags: {},
       watch: false
     },
     {
       namespace: 'N',
       flags: './test/flags.js',
-      watch: false
+      watch: true
     },
     {
       namespace: 'N',
       flags: './test/flags.js'
+    },
+    {
+      namespace: 'N',
+      flags: './test/flags.js',
+      watch: []
+    },
+    {
+      namespace: 'N',
+      flags: './test/flags.js',
+      watch: [ './foo.js' ]
     }
   ].forEach(option => {
     t.equal(validateOptions(option), option)
-    t.equal(setOptions(option, './', {}, true).namespace, option.namespace)
+    const po = setOptions(option, './', {}, true)
+    t.equal(po.namespace, option.namespace)
+    t.equal(!!option.watch, !!po.watcher)
+    po.watcher && po.watcher.close()
   })
   t.end()
 })
