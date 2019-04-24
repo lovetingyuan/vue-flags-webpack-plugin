@@ -5,7 +5,7 @@ const clearModule = require('clear-module')
 
 const rfp = Module._resolveFilename
 const mmap = [
-  'webpack', 'vue-loader', 'vue-loader/lib/plugin', 'vue-template-compiler/package.json'
+  'webpack', 'vue-loader', 'vue-loader/lib/plugin', 'vue-template-compiler', 'vue-template-compiler/package.json'
 ].reduce((k1, k2) => {
   k1[k2] = require.resolve(k2)
   return k1
