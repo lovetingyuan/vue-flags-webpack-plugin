@@ -1,4 +1,8 @@
 const Module = require('module')
+const test = require('tape')
+const chalk = require('chalk')
+const clearModule = require('clear-module')
+
 const rfp = Module._resolveFilename
 const mmap = [
   'webpack', 'vue-loader', 'vue-loader/lib/plugin', 'vue-template-compiler/package.json'
@@ -12,10 +16,9 @@ Module._resolveFilename = function _resolveFilename (req, ...args) {
   return rfp.call(this, req, ...args)
 }
 
+test.onFinish(() => { Module._resolveFilename = rfp })
+
 const { build, dev } = require('./webpack-test')
-const test = require('tape')
-const chalk = require('chalk')
-const clearModule = require('clear-module')
 
 const has = (flag, result, watch, useVue = true) => {
   return new RegExp(`(${useVue ? 'template|' : ''}${watch ? '' : 'script|'}style):${flag}{5,}`).test(result)

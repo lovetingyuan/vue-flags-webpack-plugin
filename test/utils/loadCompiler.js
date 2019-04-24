@@ -10,7 +10,7 @@ module.exports = async function loadCompiler (version = 'latest') {
   if (fse.pathExistsSync(cachePath)) {
     try {
       const compiler = require(cachePath)
-      if ('parseComponent' in compiler) {
+      if (typeof compiler.parseComponent === 'function') {
         return compiler
       }
     } catch (e) {}
