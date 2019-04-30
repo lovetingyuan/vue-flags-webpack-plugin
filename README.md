@@ -5,7 +5,7 @@ Remove useless code by setting flags(toggles) in .vue SFC file(works with [`vue-
 [![Build Status](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin.svg?branch=master)](https://travis-ci.org/lovetingyuan/vue-flags-webpack-plugin)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-### ⚙ usage
+### ⚙ Usage
 
 install:
 ```bash
@@ -58,7 +58,7 @@ options:
   }
   ```
 
-### 🌰 example
+### 🌰 Example
 flags file: `./allFlags.js`
 ```javascript
 module.exports = {
@@ -142,7 +142,7 @@ vue component:
 </style>
 ```
 
-### ⚠️ attention
+### ⚠️ Caveats
 * `v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`.
 
   💡use `<template v-*-flag>` to wrap the condition elements.
