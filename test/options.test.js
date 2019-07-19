@@ -95,7 +95,7 @@ test(chalk.cyan('options test:invalid'), t => {
   }, {
     flags: 'aaaaaaaa',
     namespace: 'F',
-    msg: /no such file or directory.+a{5,}/
+    msg: /Options: "flags" cannot be resolved, .+a{5,}/
   }].forEach(option => {
     const msg = option.msg
     delete option.msg
