@@ -51,7 +51,7 @@ test(chalk.cyan('options test:valid'), t => {
     {
       namespace: 'N',
       flags: './test/flags.js',
-      watch: [ './foo.js' ]
+      watch: ['./foo.js']
     }
   ].forEach(option => {
     t.equal(validateOptions(option), option)
@@ -68,11 +68,11 @@ test(chalk.cyan('options test:invalid'), t => {
     flags: { a: true },
     namespace: 'F',
     watch: true
-  }), /flags should be string/)
+  }), /options\.flags should be a non-empty string/)
   t.throws(() => validateOptions({
     flags: { a: true, b: 0 },
     namespace: 'F'
-  }), /b should be boolean/)
+  }), /options\.flags\['b'\] should be a boolean/)
 
   ;[{
     flags: { a: true },

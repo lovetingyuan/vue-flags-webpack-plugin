@@ -1,4 +1,9 @@
 ## vue-flags-webpack-plugin changelog
+### v1.1.0
++ update dependencies
++ drop support for node < 8.9.0
+
+
 ### v1.0.0 🎉
 + add `watch` option to support modify flags in development
 + `flags` could also be a file path
