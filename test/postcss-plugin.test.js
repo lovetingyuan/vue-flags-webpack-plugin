@@ -42,7 +42,7 @@ loadCompiler().then(({ parseComponent }) => {
       Promise.all(cases.map((style) => {
         delete postcssPlugin.pluginOptions
         return postcss([postcssPlugin(eval(`({${style.attrs.flag}})`))]) // eslint-disable-line
-          .process(source.content, { from: void 0 })
+          .process(source.content, { from: undefined })
           .then(ret => {
             t.equal(ret.css, style.content)
           })
