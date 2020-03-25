@@ -10,7 +10,7 @@
     <br v-else-flag __d0-->
     <section v-if-flag="d">
       <input :type="dynamic" v-if-flag="a" value="__d1_a1--">
-      <input :type="dynamic" v-if="data" v-elif-flag="c" value="__d1_a0_c1--">
+      <input :type="dynamic" v-elif-flag="c" value="__d1_a0_c1--">
     </section>
   </t-a>
 </template>
