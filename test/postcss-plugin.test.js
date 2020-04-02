@@ -4,9 +4,7 @@ const postcssPlugin = require('../lib/postcss-flags-plugin')
 const test = require('tape')
 const chalk = require('chalk')
 const path = require('path')
-
-const loadCompiler = require('./utils/loadCompiler')
-const getTemplates = require('./utils/loadTemplates')
+const fs = require('fs')
 
 test(chalk.cyan('postcss-plugin:exp'), t => {
   const main = params => {
@@ -29,24 +27,23 @@ test(chalk.cyan('postcss-plugin:exp'), t => {
   t.end()
 })
 
-loadCompiler().then(({ parseComponent }) => {
-  const templates = getTemplates(path.join(__dirname, 'postcss-plugin'))
-  Object.keys(templates).forEach(name => {
-    const { styles } = parseComponent(templates[name])
-    let source
-    const cases = styles.filter(s => {
-      if (s.attrs.flag) return true
-      source = s
-    })
-    test(chalk.cyan('postcss-plugin:' + name), t => {
-      Promise.all(cases.map((style) => {
-        delete postcssPlugin.pluginOptions
-        return postcss([postcssPlugin(eval(`({${style.attrs.flag}})`))]) // eslint-disable-line
-          .process(source.content, { from: undefined })
-          .then(ret => {
-            t.equal(ret.css, style.content)
-          })
-      })).then(() => t.end()).catch(err => t.fail(err))
-    })
+const { parseComponent } = require('vue-template-compiler')
+fs.readdirSync(path.join(__dirname, 'postcss-plugin')).forEach((name) => {
+  const template = fs.readFileSync(path.join(__dirname, 'postcss-plugin', name), 'utf8')
+  const { styles } = parseComponent(template)
+  let source
+  const cases = styles.filter(s => {
+    if (s.attrs.flag) return true
+    source = s
+  })
+  test(chalk.cyan('postcss-plugin:' + name), t => {
+    Promise.all(cases.map((style) => {
+      delete postcssPlugin.pluginOptions
+      return postcss([postcssPlugin(eval(`({${style.attrs.flag}})`))]) // eslint-disable-line
+        .process(source.content, { from: undefined })
+        .then(ret => {
+          t.equal(ret.css, style.content)
+        })
+    })).then(() => t.end()).catch(err => t.fail(err))
   })
 })
