@@ -38,8 +38,11 @@ fs.readdirSync(path.join(__dirname, 'postcss-plugin')).forEach((name) => {
   })
   test(chalk.cyan('postcss-plugin:' + name), t => {
     Promise.all(cases.map((style) => {
-      delete postcssPlugin.pluginOptions
-      return postcss([postcssPlugin(eval(`({${style.attrs.flag}})`))]) // eslint-disable-line
+      // delete postcssPlugin.pluginOptions
+      postcssPlugin.options = {
+        flags: eval(`({${style.attrs.flag}})`) // eslint-disable-line
+      }
+      return postcss([postcssPlugin()]) // eslint-disable-line
         .process(source.content, { from: undefined })
         .then(ret => {
           t.equal(ret.css, style.content)

@@ -76,7 +76,11 @@ module.exports = {
     rules: [{
       test: /\.css$/,
       loader: 'postcss-loader',
-      options: { plugins: [postcssFlagsPlugin()] }
+      options: {
+        plugins: [
+          postcssFlagsPlugin()
+        ]
+      }
     }]
   },
   plugins: [
@@ -151,6 +155,8 @@ vue component:
 * `v-*-flag` can not be used with `v-pre` directive or under it.
 
 * `v-*-flag` should not be used with `slot-scope` or `v-slot`.
+
+* The plugin will execute flag expression, make sure the flag value is safe.
 
 ### License
 MIT

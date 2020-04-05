@@ -36,71 +36,71 @@ test(chalk.cyan('options test:valid'), t => {
     },
     {
       namespace: 'N',
-      flags: './test/flags.js',
+      flags: './flags.js',
       watch: true
     },
     {
       namespace: 'N',
-      flags: './test/flags.js'
+      flags: './flags.js'
     },
     {
       namespace: 'N',
-      flags: './test/flags.js',
+      flags: './flags.js',
       watch: []
     },
     {
       namespace: 'N',
-      flags: './test/flags.js',
+      flags: './flags.js',
       watch: ['./foo.js']
     }
   ].forEach(option => {
-    t.equal(validateOptions(option), option)
-    const po = setOptions(option, './', {}, true)
-    t.equal(po.namespace, option.namespace)
-    t.equal(!!option.watch, !!po.watcher)
-    po.watcher && po.watcher.close()
+    t.doesNotThrow(() => {
+      validateOptions(option)
+      const po = setOptions(option, __dirname, {}, true)
+      t.equal(po.namespace, option.namespace)
+      t.equal(!!option.watch, !!po.watcher)
+      po.watcher && po.watcher.close()
+    })
   })
   t.end()
 })
 
 test(chalk.cyan('options test:invalid'), t => {
-  t.throws(() => validateOptions({
+  ;[{ err: /"namespace" must be stri/ }, {
     flags: { a: true },
-    namespace: 'F',
-    watch: true
-  }), /options\.flags should be a non-empty string/)
-  t.throws(() => validateOptions({
-    flags: { a: true, b: 0 },
-    namespace: 'F'
-  }), /options\.flags\['b'\] should be a boolean/)
-
-  ;[{
-    flags: { a: true },
-    namespace: 'parseInt',
-    msg: /not a valid or available variable/
-  }, {
-    flags: { a: true },
-    namespace: ' ',
-    msg: /not a valid or available variable/
-  }, {
-    flags: './test/flags.js',
     namespace: 'F',
     watch: true,
-    msg: /sure only use "watch" in development mode/
+    err: /"flags" must be a file path when "watch" i/
   }, {
     flags: { a: true },
-    namespace: 'D',
-    ignoreFiles: { a: /s/, '#fb': /ss/ },
-    msg: /Invalid flag value/
+    namespace: ' F',
+    err: /is not a valid or available variable name/
   }, {
-    flags: 'aaaaaaaa',
+    flags: [],
     namespace: 'F',
-    msg: /Options: "flags" cannot be resolved, .+a{5,}/
+    err: /"flags" must be object or file /
+  }, {
+    flags: {},
+    namespace: 'F',
+    ignoreFiles: [],
+    err: /"ignoreFiles" must be object/
+  }, {
+    flags: {},
+    namespace: 'F',
+    ignoreFiles: { k: '' },
+    err: /"ignoreFiles" must use regular expression/
+  }, {
+    flags: './test/flags.js',
+    namespace: 'df',
+    watch: [],
+    err: /Make sure only use "watch" in development mode/
   }].forEach(option => {
-    const msg = option.msg
-    delete option.msg
-    t.doesNotThrow(() => validateOptions(option))
-    t.throws(() => setOptions(option, './', {}, false), msg)
+    const err = option.err
+    delete option.err
+    t.throws(() => {
+      validateOptions(option)
+      setOptions(option, './', {}, false)
+    }, err)
   })
   t.end()
 })

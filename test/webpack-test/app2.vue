@@ -9,13 +9,7 @@
 <script>
 export default {
   data() {
-    let title
-    if (VueFlags.b) {
-      title = 'script:bbbbbbbbbbbbbbbbbbbb'
-    } else {
-      title = 'script:nobbbbbbbbbbbbbbbbbbb'
-    }
-    return {   title  }
+    return {   title: VueFlags.b ? 'script:bbbbbbbbbbbbbbbbbbbb' : 'script:nobbbbbbbbbbbbbbbbbbb'  }
   }
 }
 </script>

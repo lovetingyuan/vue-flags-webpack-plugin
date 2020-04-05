@@ -1,95 +1,100 @@
+const Module = require('module')
+const rfp = Module._resolveFilename
+const mmap = [
+  'webpack', 'vue-loader', 'vue-loader/lib/plugin', 'vue-template-compiler', 'vue-template-compiler/package.json'
+].reduce((k1, k2) => {
+  k1[k2] = require.resolve(k2)
+  return k1
+}, {})
+
+Module._resolveFilename = function _resolveFilename (req, ...args) {
+  if (req in mmap) return mmap[req]
+  return rfp.call(this, req, ...args)
+}
+
 const path = require('path')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MemoryFileSystem = require('memory-fs')
-const events = require('events')
-const Fs = require('fs')
-const FlagPlugin = require('../..')
 const webpack = require(path.resolve(__dirname, '../node_modules/webpack'))
+const test = require('tape')
 
-const webpackConfig = (flags, dev, useVue) => ({
-  context: __dirname,
-  entry: useVue ? './main.js' : './main-no-vue.js',
-  mode: dev ? 'development' : 'production',
-  devtool: false,
-  module: {
-    rules: [
-      useVue ? {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      } : null,
-      {
-        test: /\.css$/,
-        loader: 'postcss-loader',
-        options: {
-          plugins: [FlagPlugin.postcssFlagsPlugin()]
-        }
-      }
-    ].filter(Boolean)
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: dev ? 'development' : 'production'
-      }
-    }),
-    new FlagPlugin({
-      flags: dev ? './flags-test.js' : flags,
-      namespace: 'VueFlags',
-      ignoreFiles: {
-        a: /add\.js$/
-      },
-      watch: !!dev
-    }),
-    useVue ? new VueLoaderPlugin() : null
-  ].filter(Boolean)
-})
+test.onFinish(() => { Module._resolveFilename = rfp })
 
-function build (flags, useVue) {
-  return new Promise((resolve, reject) => {
-    const compiler = webpack(webpackConfig(flags, false, useVue))
-    const fs = compiler.outputFileSystem = new MemoryFileSystem()
-    compiler.hooks.failed.tap(FlagPlugin.name, err => reject(err))
-    compiler.run((err, stats) => {
-      if (err || stats.hasErrors()) {
-        reject(err || stats.compilation.errors)
-      } else {
-        resolve(fs.readFileSync(path.join(compiler.outputPath, 'main.js'), 'utf8'))
-      }
-    })
-  })
-}
-
-function dev (flags) {
-  const eventEmitter = new events.EventEmitter()
-  const writeFlags = flags => {
-    Fs.writeFileSync(path.join(__dirname, 'flags-test.js'), 'module.exports=' + JSON.stringify(flags))
-  }
-  writeFlags(flags)
-  const compiler = webpack(webpackConfig(flags, true, true))
-  const { pluginOptions } = compiler.options.plugins.find(p => p instanceof FlagPlugin)
-  const fs = compiler.outputFileSystem = new MemoryFileSystem()
-  compiler.hooks.done.tap(FlagPlugin.name, stats => {
-    eventEmitter.emit('done', fs.readFileSync(path.join(compiler.outputPath, 'main.js'), 'utf8'))
-  })
-  compiler.hooks.failed.tap(FlagPlugin.name, err => {
-    eventEmitter.emit('error', err)
-  })
-  const watcher = compiler.watch({
-    aggregateTimeout: 1000
-  }, (err, stats) => {
-    if (err) {
-      eventEmitter.emit('error', err)
+const runTest = (Case, t) => {
+  const FlagPlugin = require('../..')
+  const plugin = new FlagPlugin({
+    flags: Case.flags,
+    namespace: 'VueFlags',
+    ignoreFiles: {
+      a: /add\.js$/
     }
   })
-  eventEmitter.on('close', (callback) => {
-    pluginOptions.watcher.close()
-    process.nextTick(() => watcher.close(callback))
+  const { promise, resolve, reject } = new function () {
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = resolve
+      this.reject = reject
+    })
+  }()
+  const compiler = webpack({
+    context: __dirname,
+    entry: './main.js',
+    mode: 'production',
+    devtool: false,
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader'
+        },
+        {
+          test: /\.css$/,
+          loader: 'postcss-loader',
+          options: {
+            plugins: [FlagPlugin.postcssFlagsPlugin()]
+          }
+        }
+      ]
+    },
+    plugins: [
+      plugin,
+      new VueLoaderPlugin()
+    ]
   })
-  eventEmitter.on('update', writeFlags)
-  return eventEmitter
+  const fs = compiler.outputFileSystem = new MemoryFileSystem()
+  compiler.hooks.failed.tap(FlagPlugin.name, reject)
+  compiler.run((err, stats) => {
+    const error = err || stats.compilation.errors[0]
+    if (error) {
+      reject(error)
+    } else {
+      const result = fs.readFileSync(path.join(compiler.outputPath, 'main.js'), 'utf8')
+      t.ok(Case.nothas.every(r => !result.includes(r)))
+      if (Case.has) {
+        t.ok(Case.has.every(r => result.includes(r)))
+      }
+      resolve()
+    }
+  })
+  return promise
 }
 
-module.exports = {
-  build,
-  dev
-}
+test('webpack', t => {
+  const tasks = [{
+    flags: { a: true, b: false },
+    has: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa'],
+    nothas: ['template:noaaaaa', 'script:noaaaaa', 'style:noaaaaa', 'template:bbbbb', 'script:bbbbb', 'style:bbbbb']
+  }, {
+    flags: { a: false, b: false },
+    nothas: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa', 'template:bbbbb', 'script:bbbbb', 'style:bbbbb']
+  }, {
+    flags: { a: false, b: true },
+    nothas: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa', 'template:nobbbbb', 'script:nobbbbb', 'style:nobbbbb']
+  }]
+  tasks.reduce((p, task) => {
+    return p.then(() => runTest(task, t))
+  }, Promise.resolve()).then(() => {
+    t.end()
+  }).catch(err => {
+    t.failed(err)
+  })
+})
