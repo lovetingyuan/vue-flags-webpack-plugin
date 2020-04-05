@@ -1,9 +1,7 @@
-<template title="error for next to" error="v-else-flag must be next to " flag="2">
+<template error="v-else-flag must be next to v-if-flag">
   <div>
-    <h3>this is error test</h3>
-    <header v-if-flag="a">__a1--</header>
-    123
-    <main v-else-flag>__a0--</main>
-    <div v-if-flag="b" title="__b1--"></div>
+    <div v-if-flag="a">@a1#</div>
+    <div></div>
+    <div v-else-flag>@a0#</div>
   </div>
 </template>

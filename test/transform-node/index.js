@@ -1,129 +1,139 @@
+const path = require('path')
+const fse = require('fs-extra')
+const Terser = require('terser')
+const got = require('got')
+const { PLUGIN_NAME } = require('../../lib/constants')
+const onEnd = require('util').promisify(require('end-of-stream'))
+const test = require('tape')
+const chalk = require('chalk')
+
 const {
   preTransformNode,
-  postTransformNode,
+  // postTransformNode,
   staticKeys
 } = require('../../lib/transform-node')
 
-const loadCompiler = require('../utils/loadCompiler')
-const test = require('tape')
-const chalk = require('chalk')
-const semver = require('semver')
-
-function collectTexts (str) {
-  const textReg = /__([a-z01_]+?)--/g
-  const commentReg = /<!--([\s\S]*?)-->/g
-  const ret = new Set()
-  str.replace(commentReg, () => '').replace(textReg, (s, t) => ret.add(t))
-  return [...ret]
-}
-
-function compareArray (a1, a2) {
-  if (a1.length !== a2.length) return false
-  return a1.every(v => a2.includes(v))
-}
-
-function genFlags (seeds, num) {
-  if (typeof seeds === 'string') {
-    const flags = seeds.split('_')
-    const flagMap = {}
-    flags._map = flagMap
-    flags.forEach(f => { flagMap[f[0]] = f[1] === '1' })
-    return [flags]
+const loadTemplates = (filenames) => {
+  if (!filenames || !filenames.length) {
+    filenames = fse.readdirSync(__dirname).filter(v => v.endsWith('.vue')).map(v => v.split('.')[0])
   }
-  const ret = [] // [['a1', 'b0', _map: { a: true, b: false }]]
-  for (let i = 0; i < num; i++) {
-    const flagMap = {}
-    const flags = seeds.map(c => {
-      flagMap[c] = Math.random() > 0.5
-      return c + (flagMap[c] ? 1 : 0)
-    })
-    flags._map = flagMap
-    ret.push(flags)
-  }
-  return ret
+  return filenames.reduce((mp, file) => {
+    mp[file] = fse.readFileSync(path.join(__dirname, file + '.vue'), 'utf8')
+    return mp
+  }, {})
 }
 
-function runTest ({ parseComponent, compile }, version, template) {
-  const {
-    template: { content: html, attrs }
-  } = parseComponent(template)
-  const { title, flag, error = 0, tip = 0, 'min-version': minVersion } = attrs
-  if (version !== 'latest' && minVersion && semver.lt(version, minVersion)) return
-  const allTexts = collectTexts(html)
-  const flagsList = typeof flag === 'string'
-    ? (Number(flag) + '' === flag ? genFlags(['a', 'b', 'c', 'd', 'e', 'f'], Math.pow(2, +flag)) : genFlags(flag))
-    : genFlags(['a', 'b', 'c', 'd', 'e', 'f'], typeof flag === 'boolean' ? 1 : 16)
-  test(chalk.cyan(`${title}@${version}`), t => {
-    flagsList.forEach(flags => {
-      const { render, staticRenderFns, errors, tips } = compile(html, {
-        outputSourceRange: true,
-        modules: [{
-          staticKeys,
-          preTransformNode,
-          postTransformNode (ast, option) {
-            postTransformNode(ast, option, { flags: flags._map })
-          }
-        }]
-      })
-      const result = render + staticRenderFns
-      if (error || tip) {
-        if (error) {
-          t.ok(
-            errors.some((err) => {
-              const msg = typeof err === 'string' ? err : err.msg + ''
-              return msg.indexOf(error) > 0
-            }),
-            'errors match expect: ' + error
-          )
-        }
-        if (tip) {
-          t.ok(
-            tips.some((err) => {
-              const msg = typeof err === 'string' ? err : err.msg + ''
-              return msg.indexOf(tip) > 0
-            }),
-            'tips match expect: ' + tip
-          )
-        }
+const belongsTo = (a, b) => {
+  for (const k of Object.keys(a)) {
+    if (!(k in b)) return false
+    if (a[k] !== b[k]) return false
+  }
+  return true
+}
+
+const loadCompiler = async (version = 'latest') => {
+  const url = `https://unpkg.com/vue-template-compiler@${version}/build.js`
+  const cachePath = path.resolve(__dirname, `../node_modules/.cache/${PLUGIN_NAME}/tests/vue-template-compiler-${version}.js`)
+  if (fse.pathExistsSync(cachePath)) {
+    try {
+      const compiler = require(cachePath)
+      if (typeof compiler.parseComponent === 'function') {
+        compiler.__version = version
+        return compiler
       }
-      if (!error) {
-        t.notOk(
-          errors.length || /("|')(v-)?(if|else|elif)-flag/.test(result),
-          'no errors and v-*-flag dirs'
-        )
-        const retOfCompiler = collectTexts(result)
-        const retOfTest = allTexts.filter(text => text.split('_').every(t => flags.includes(t)))
-        t.ok(compareArray(retOfCompiler, retOfTest), 'passed for ' + chalk.green(flags))
-      }
-    })
-    t.end()
+    } catch (e) { }
+  }
+  await fse.ensureFile(cachePath)
+  await onEnd(got.stream(url).pipe(fse.createWriteStream(cachePath)))
+  const compiler = require(cachePath)
+  compiler.__version = version
+  return compiler
+}
+
+function generateFlags (html, len) {
+  const flags = new Set()
+  html.replace(/@([a-z0-9_ ]+?)#/mg, (a, str) => {
+    str.trim().split('_').forEach(v => flags.add(v[0]))
   })
+  const names = [...flags]
+  const num = names.length
+  const list = Array.from(Array(2 ** num)).map(() => {
+    return Array.from(Array(num)).reduce((a, _, b) => {
+      a[names[b]] = Math.random() > 0.5
+      return a
+    }, {})
+  })
+  if (typeof len === 'number') {
+    list.length = len
+  }
+  return list
 }
 
-module.exports = runTest
-
-/* eslint-disable */
-if (require.main === module) {
-  const version = '2.6.10'
-  loadCompiler(version).then(compiler => {
-    const result = compiler.compile(`
-      <div v-if="false">
-
-      </div>
-    `, {
-      outputSourceRange: true,
-      modules: [{
-        // staticKeys,
-        preTransformNode,
-        postTransformNode (ast, option) {
-          if (!ast.parent) {
-            debugger
-          }
-          postTransformNode(ast, option, { flags: { a: false, b: true, c: false, d: true, e: false } })
-          console.log(ast)
-        }
-      }]
+function runEach (compiler, template, attrs, flags, t) {
+  const { render, staticRenderFns, errors } = compiler.compile(template, {
+    outputSourceRange: true,
+    modules: [{
+      staticKeys,
+      preTransformNode (ast, options) {
+        return preTransformNode(ast, options, { flags: { ...flags } })
+      }
+    }]
+  })
+  if (errors.length) {
+    if (attrs.error) {
+      t.ok(errors[0].msg.includes(attrs.error), 'expected error: ' + attrs.error)
+    } else {
+      t.fail(errors[0].msg)
+    }
+    return
+  }
+  const { error, code } = Terser.minify(render + ';' + staticRenderFns, {
+    parse: {
+      bare_returns: true
+    }
+  })
+  t.error(error, 'should not error with terser.')
+  const compiledMark = {}
+  code.replace(/@([a-z0-9_ ]+?)#/mg, (s, bg) => {
+    bg.trim().split('_').forEach(item => {
+      const name = item[0]
+      const bool = item[1] !== '0'
+      if (!(name in compiledMark)) {
+        compiledMark[name] = bool
+      } else {
+        t.equal(compiledMark[name], bool, 'should not conflict.')
+      }
     })
-    debugger
+  })
+  t.ok(
+    belongsTo(compiledMark, flags),
+    `flags: ${JSON.stringify(flags)}, computed: ${JSON.stringify(compiledMark)}`
+  )
+}
+
+module.exports = function startTest () {
+  Promise.all([
+    '2.5.0',
+    '2.5.22',
+    '2.6.11',
+    'latest'
+  ].map(loadCompiler)).then(compilers => {
+    compilers.forEach(compiler => {
+      Object.entries(loadTemplates()).forEach(([name, file]) => {
+        const { template: { content: template, attrs } } = compiler.parseComponent(file)
+        test(chalk.cyan(`template: ${name}, compiler: ${compiler.__version}`), t => {
+          generateFlags(template).forEach(flags => {
+            runEach(compiler, template, attrs, flags, t)
+          })
+          t.end()
+        })
+      })
+    })
+  }).then(() => {
+    console.log('All cases passed!')
+  }).catch(err => {
+    console.error('Test failed:')
+    console.error(err)
+    process.exit(-1)
   })
 }

@@ -76,7 +76,11 @@ module.exports = {
     rules: [{
       test: /\.css$/,
       loader: 'postcss-loader',
-      options: { plugins: [postcssFlagsPlugin()] }
+      options: {
+        plugins: [
+          postcssFlagsPlugin()
+        ]
+      }
     }]
   },
   plugins: [
@@ -143,13 +147,16 @@ vue component:
 ```
 
 ### ⚠️ Caveats
-* requires [`vue-loader`](https://github.com/vuejs/vue-loader) >= 15, `webpack` >= 4, `vue-template-compiler` >= 2.5.12
-* `v-*-flag` can not be used with `v-if` followed by `v-else-if` or `v-else`.
+* requires [`vue-loader`](https://github.com/vuejs/vue-loader) >= 15, `webpack` >= 4, `vue-template-compiler` >= 2.5.0
+* `v-*-flag` can not be used with vue condition directive(`v-if`,`v-else-if`,`v-else`).
 
-  💡use `<template v-*-flag>` to wrap the condition elements.
-* `v-else-flag` and `v-elif-flag` can not be used with `slot-scope` or `v-slot`.
+  💡use `<template v-*-flag>` to wrap the condition block.
 
-  💡only use `v-if-flag` on scoped slot element and put all slots in the end.
+* `v-*-flag` can not be used with `v-pre` directive or under it.
+
+* `v-*-flag` should not be used with `slot-scope` or `v-slot`.
+
+* The plugin will execute flag expression, make sure the flag value is safe.
 
 ### License
 MIT

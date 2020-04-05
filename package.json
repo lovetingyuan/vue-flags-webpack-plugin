@@ -10,7 +10,7 @@
     "lib"
   ],
   "engines": {
-    "node": ">=8.9.0"
+    "node": ">=10.0.0"
   },
   "scripts": {
     "test": "npm run lint && npx tape test/*.test.js",
@@ -46,23 +46,20 @@
   },
   "homepage": "https://github.com/lovetingyuan/vue-flags-webpack-plugin#readme",
   "dependencies": {
-    "chalk": "^3.0.0",
-    "clear-module": "^4.0.0",
-    "find-cache-dir": "^3.2.0",
-    "fs-extra": "^8.1.0",
-    "loader-utils": "^1.2.3",
-    "schema-utils": "^2.6.1",
-    "semver": "^7.0.0",
-    "slash": "^3.0.0",
-    "watchpack": "^1.6.0"
+    "chalk": "^4.0.0",
+    "clear-module": "^4.1.1",
+    "find-cache-dir": "^3.3.1",
+    "loader-utils": "^2.0.0",
+    "watchpack": "^1.6.1"
   },
   "peerDependencies": {
-    "webpack": "^4.1.0"
+    "webpack": "^4.42.1"
   },
   "devDependencies": {
-    "husky": "^3.1.0",
-    "standard": "^14.3.1",
-    "tape": "^4.11.0"
+    "husky": "^4.2.3",
+    "standard": "^14.3.3",
+    "tape": "^4.13.2",
+    "fs-extra": "^9.0.0"
   },
   "husky": {
     "hooks": {
