@@ -1,0 +1,22 @@
+process.env.TEST = 'TEST'
+const test = require('tape')
+const { testFlagDir } = require('../lib/template-loader')
+test('test regexp for test v-*-flag', t => {
+  t.ok(testFlagDir('<div v-if-flag="d"></div>'))
+  t.ok(testFlagDir('<div v-if v-if-flag="d"></div>'))
+  t.ok(testFlagDir('<div v-else v-if-flag="d"></div>'))
+  t.ok(testFlagDir('<div data-v-if-flag="a" v-if-flag="d"></div>'))
+  t.ok(testFlagDir('<div v-if-flag="d" v-if></div>'))
+  t.ok(testFlagDir('<div v-if-flag=\'d\' v-if></div>'))
+  t.ok(testFlagDir('<div v-if-flag=d v-if></div>'))
+  t.ok(testFlagDir('<div v-if-flag= v-if></div>'))
+
+  t.ok(testFlagDir('<div   v-if-flag = "  d"  ></div>'))
+  t.ok(testFlagDir('<div v-if-flag= "d" v-if></div>'))
+  t.ok(testFlagDir('<div v-if-flag ="d" v-if></div>'))
+  t.ok(testFlagDir('<div    v-if-flag="  sdf " v-if></div>'))
+  t.notOk(testFlagDir('<div    v-if-flag="" v-if></div>'))
+  t.notOk(testFlagDir('<div    v-if-flag v-if></div>'))
+  t.notOk(testFlagDir('<div    v-if-flag=\'\' v-if></div>'))
+  t.end()
+})

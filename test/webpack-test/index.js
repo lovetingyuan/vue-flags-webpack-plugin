@@ -81,13 +81,15 @@ const runTest = (Case, t) => {
 test('webpack', t => {
   const tasks = [{
     flags: { a: true, b: false },
-    has: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa'],
+    has: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa', 'template:nobbbbb', 'script:nobbbbb', 'style:nobbbbb'],
     nothas: ['template:noaaaaa', 'script:noaaaaa', 'style:noaaaaa', 'template:bbbbb', 'script:bbbbb', 'style:bbbbb']
   }, {
     flags: { a: false, b: false },
+    has: ['template:noaaaaa', 'script:noaaaaa', 'style:noaaaaa', 'template:nobbbbb', 'script:nobbbbb', 'style:nobbbbb'],
     nothas: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa', 'template:bbbbb', 'script:bbbbb', 'style:bbbbb']
   }, {
     flags: { a: false, b: true },
+    has: ['template:noaaaaa', 'script:noaaaaa', 'style:noaaaaa', 'template:bbbbb', 'script:bbbbb', 'style:bbbbb'],
     nothas: ['template:aaaaa', 'script:aaaaa', 'style:aaaaa', 'template:nobbbbb', 'script:nobbbbb', 'style:nobbbbb']
   }]
   tasks.reduce((p, task) => {
@@ -95,6 +97,6 @@ test('webpack', t => {
   }, Promise.resolve()).then(() => {
     t.end()
   }).catch(err => {
-    t.failed(err)
+    t.fail(err && err.message)
   })
 })
