@@ -58,8 +58,8 @@ test(chalk.cyan('options test:valid'), t => {
       validateOptions(option)
       const po = setOptions(option, __dirname, {}, true)
       t.equal(po.namespace, option.namespace)
-      t.equal(!!option.watch, !!po.watcher)
-      po.watcher && po.watcher.close()
+      t.equal(!!option.watch, !!po.stopWatch)
+      po.stopWatch && po.stopWatch()
     })
   })
   t.end()
@@ -78,7 +78,7 @@ test(chalk.cyan('options test:invalid'), t => {
   }, {
     flags: [],
     namespace: 'F',
-    err: /"flags" must be object or file /
+    err: /"flags" must be plain object or file path/
   }, {
     flags: {},
     namespace: 'F',

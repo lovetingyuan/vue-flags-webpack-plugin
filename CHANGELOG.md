@@ -1,5 +1,10 @@
 ## vue-flags-webpack-plugin changelog
 
+### v2.0.0
++ refactor v-*-flag process
++ minimal nodejs version 10.0.0
++ update dependencies
+
 ### v1.1.3
 + update dependencies
 + add nodejs 12,13 test in ci
